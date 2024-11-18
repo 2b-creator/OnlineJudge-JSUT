@@ -1,5 +1,5 @@
 from flask import Flask, request
-from UserAdmin.UserRegister import *
+from UserAdmin.UserLogic import *
 
 app = Flask(__name__)
 
@@ -10,7 +10,7 @@ def index():
 
 @app.route('/api/submit', methods=['POST'])
 def submit_code():
-    questions_id = request.values.get("id")
+    pass
 
 
 if __name__ == "__main__":

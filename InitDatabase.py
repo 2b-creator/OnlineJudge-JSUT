@@ -9,14 +9,15 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,                -- 用户ID（自增主键）
     stu_id VARCHAR(50) UNIQUE NOT NULL,   -- 学号
     username VARCHAR(50) UNIQUE NOT NULL, -- 用户名
-    nickname VARCHAR(50), -- 昵称，外显名称
+    nickname VARCHAR(50),                 -- 昵称，外显名称
     password_hash TEXT NOT NULL,          -- 密码（存储哈希值）
     email VARCHAR(100) UNIQUE NOT NULL,   -- 邮箱
     created_at TIMESTAMP DEFAULT NOW(),   -- 注册时间
     last_login TIMESTAMP,                 -- 最近登录时间
     role VARCHAR(20) DEFAULT 'user',      -- 角色（例如：user, admin, moderator）
     is_active BOOLEAN DEFAULT TRUE,       -- 账号是否激活
-    access_token VARCHAR(100) UNIQUE NOT NULL,      --登录时获取 access-token 令牌
+    ac_num int DEFAULT 0,                 -- ac 题目的数量
+    access_token VARCHAR(100) UNIQUE NOT NULL      --登录时获取 access-token 令牌
 );
 """
 create_user_profiles = """
