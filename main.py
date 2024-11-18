@@ -1,7 +1,7 @@
 from flask import Flask, request
+from UserAdmin.UserRegister import *
 
 app = Flask(__name__)
-
 
 @app.route('/')
 def index():
