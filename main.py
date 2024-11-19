@@ -1,9 +1,7 @@
-from crypt import methods
-
-import celery
 from flask import Flask, request
-from pygments.lexers.jsonnet import jsonnet_token
 
+from Counters.CodeSubmitCounter import add_submit_count
+from Counters.StatisticAccept import record_ac
 from UserAdmin.Auth.GenJWT import validate_token, get_username
 from UserAdmin.UserLogic import *
 import UserAdmin.UserLogic
@@ -46,7 +44,8 @@ def user_login():
     username = request.json.get("username")
     password_hash = request.json.get("password_hash")
     info = UserAdmin.UserLogic.login(username, password_hash)
-    return jsonify(info)
+    status_code = info["code"]
+    return jsonify(info), status_code
 
 
 @app.route('/api/register', methods=['POST'])
@@ -56,7 +55,8 @@ def register_new():
     password_hash_cm = request.json.get("password_hash_cm")
     email_cm = request.json.get("email_cm")
     info = UserAdmin.UserLogic.register(username, stu_id, password_hash_cm, email_cm)
-    return jsonify(info)
+    status_code = info["code"]
+    return jsonify(info), status_code
 
 
 @app.route('/api/submit', methods=['POST'])
@@ -68,9 +68,17 @@ def submit_code():
     language = request.json.get("language")
     task = judge_work.delay(problem_id, username, code, language)
     output = task.get()
+
     if task.failed():
         return jsonify({"code": 500, "message": f"Task failed with status: {task.status}"}), 500
-    return jsonify({"code": 200, "message:": "success!"})
+    else:
+        for i in output["results"]:
+            if i["status"] != "success":
+                add_submit_count(problem_id)
+                break
+        else:
+            record_ac(username, problem_id, language)
+    return jsonify({"code": 200, "message:": "success!", "output": output}), 200
 
 
 if __name__ == "__main__":

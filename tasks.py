@@ -27,12 +27,14 @@ def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_f
                 if actual_output == expected_output:
                     return {"test_id": test_id, "status": "success"}
                 else:
-                    return {"test_id": test_id, "status": "failed", "expected": expected_output, "actual": actual_output}
+                    return {"test_id": test_id, "status": "failed", "expected": expected_output,
+                            "actual": actual_output}
     except subprocess.TimeoutExpired:
         return {"status": "error", "message": "Time limit exceeded"}
     except subprocess.CalledProcessError as e:
         if "memory" in e.stderr.lower():
             return {"status": "error", "message": "Memory limit exceeded"}
+
 
 def run_py(executable, code_dir, docker_image, test_file, expected_output_file, test_id):
     try:
@@ -54,12 +56,14 @@ def run_py(executable, code_dir, docker_image, test_file, expected_output_file, 
                 if actual_output == expected_output:
                     return {"test_id": test_id, "status": "success"}
                 else:
-                    return {"test_id": test_id, "status": "failed", "expected": expected_output, "actual": actual_output}
+                    return {"test_id": test_id, "status": "failed", "expected": expected_output,
+                            "actual": actual_output}
     except subprocess.TimeoutExpired:
         return {"status": "error", "message": "Time limit exceeded"}
     except subprocess.CalledProcessError as e:
         if "memory" in e.stderr.lower():
             return {"status": "error", "message": "Memory limit exceeded"}
+
 
 @celery_app.task
 def judge_work(problem_id, user_id, code, language):

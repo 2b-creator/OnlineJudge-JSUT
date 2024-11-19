@@ -86,6 +86,7 @@ CREATE TABLE user_problems (
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     problem_id INT REFERENCES problems(id) ON DELETE CASCADE,
     ac_time TIMESTAMP DEFAULT NOW(),
+    ac_lang VARCHAR(20) NOT NULL,
     PRIMARY KEY (user_id, problem_id)
 );
 """
