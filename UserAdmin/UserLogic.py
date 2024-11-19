@@ -3,7 +3,7 @@ from flask import jsonify
 import Auth.GenJWT
 
 
-def login(username: str, password_hash_cm: str):
+def login(username: str, password_hash_cm: str) -> dict:
     conn = psycopg2.connect(database="JsutOJ", user="JsutOJAdmin", password="jsutojadmin", host="127.0.0.1",
                             port="5432")
     cursor = conn.cursor()

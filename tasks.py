@@ -8,48 +8,58 @@ celery_app = Celery('tasks', broker='redis://localhost:6379/0')
 
 
 def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_file, test_id):
-    with open(test_file) as input_file, open(expected_output_file) as expected_file:
-        run_cmd = [
-            "docker", "run", "--rm",
-            "-v", f"{code_dir}:/sandbox",  # 挂载代码目录到 Docker 容器
-            "--memory", "128m",  # 限制内存
-            "--cpus", "0.5",  # 限制 CPU
-            docker_image, f"./{executable}"
-        ]
-        run_result = subprocess.run(run_cmd, stdin=input_file, capture_output=True, text=True)
-        if run_result.returncode != 0:
-            # 运行失败
-            return {"test_id": test_id, "status": "error", "message": run_result.stderr}
-        else:
-            actual_output = run_result.stdout.strip()
-            expected_output = expected_file.read().strip()
-            if actual_output == expected_output:
-                return {"test_id": test_id, "status": "success"}
+    try:
+        with open(test_file) as input_file, open(expected_output_file) as expected_file:
+            run_cmd = [
+                "docker", "run", "--rm",
+                "-v", f"{code_dir}:/sandbox",  # 挂载代码目录到 Docker 容器
+                "--memory", "128m",  # 限制内存
+                "--cpus", "0.5",  # 限制 CPU
+                docker_image, f"./{executable}"
+            ]
+            run_result = subprocess.run(run_cmd, stdin=input_file, capture_output=True, text=True)
+            if run_result.returncode != 0:
+                # 运行失败
+                return {"test_id": test_id, "status": "error", "message": run_result.stderr}
             else:
-                return {"test_id": test_id, "status": "failed", "expected": expected_output, "actual": actual_output}
-
+                actual_output = run_result.stdout.strip()
+                expected_output = expected_file.read().strip()
+                if actual_output == expected_output:
+                    return {"test_id": test_id, "status": "success"}
+                else:
+                    return {"test_id": test_id, "status": "failed", "expected": expected_output, "actual": actual_output}
+    except subprocess.TimeoutExpired:
+        return {"status": "error", "message": "Time limit exceeded"}
+    except subprocess.CalledProcessError as e:
+        if "memory" in e.stderr.lower():
+            return {"status": "error", "message": "Memory limit exceeded"}
 
 def run_py(executable, code_dir, docker_image, test_file, expected_output_file, test_id):
-    with open(test_file) as input_file, open(expected_output_file) as expected_file:
-        run_cmd = [
-            "docker", "run", "--rm",
-            "-v", f"{code_dir}:/sandbox",  # 挂载代码目录到 Docker 容器
-            "--memory", "128m",  # 限制内存
-            "--cpus", "0.5",  # 限制 CPU
-            docker_image, f"python3 {executable}"
-        ]
-        run_result = subprocess.run(run_cmd, stdin=input_file, capture_output=True, text=True)
-        if run_result.returncode != 0:
-            # 运行失败
-            return {"test_id": test_id, "status": "error", "message": run_result.stderr}
-        else:
-            actual_output = run_result.stdout.strip()
-            expected_output = expected_file.read().strip()
-            if actual_output == expected_output:
-                return {"test_id": test_id, "status": "success"}
+    try:
+        with open(test_file) as input_file, open(expected_output_file) as expected_file:
+            run_cmd = [
+                "docker", "run", "--rm",
+                "-v", f"{code_dir}:/sandbox",  # 挂载代码目录到 Docker 容器
+                "--memory", "128m",  # 限制内存
+                "--cpus", "0.5",  # 限制 CPU
+                docker_image, f"python3 {executable}"
+            ]
+            run_result = subprocess.run(run_cmd, timeout=1, stdin=input_file, capture_output=True, text=True)
+            if run_result.returncode != 0:
+                # 运行失败
+                return {"test_id": test_id, "status": "error", "message": run_result.stderr}
             else:
-                return {"test_id": test_id, "status": "failed", "expected": expected_output, "actual": actual_output}
-
+                actual_output = run_result.stdout.strip()
+                expected_output = expected_file.read().strip()
+                if actual_output == expected_output:
+                    return {"test_id": test_id, "status": "success"}
+                else:
+                    return {"test_id": test_id, "status": "failed", "expected": expected_output, "actual": actual_output}
+    except subprocess.TimeoutExpired:
+        return {"status": "error", "message": "Time limit exceeded"}
+    except subprocess.CalledProcessError as e:
+        if "memory" in e.stderr.lower():
+            return {"status": "error", "message": "Memory limit exceeded"}
 
 @celery_app.task
 def judge_work(problem_id, user_id, code, language):
