@@ -8,15 +8,15 @@ def login(username: str, password_hash_cm: str) -> dict:
                             port="5432")
     cursor = conn.cursor()
     cursor.execute("SELECT password_hash FROM users WHERE username='%s'", (username,))
-    password_hash = cursor.fetchone()
+    password_hash = cursor.fetchone()[0]
 
     if password_hash is not None:
         if password_hash == password_hash_cm:
             cursor.execute("SELECT access_token FROM users WHERE username=%s", (username,))
-            token = cursor.fetchone()
+            token = cursor.fetchone()[0]
 
             if token is None and Auth.GenJWT.validate_token(token, username) == False:
-                token = Auth.GenJWT.generate_token(username)
+                token = Auth.GenJWT.generate_token(username)[0]
                 cursor.execute("UPDATE users SET access-token = %s WHERE username=%s", (token, username))
                 conn.commit()
             conn.close()

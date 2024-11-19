@@ -73,14 +73,25 @@ CREATE TABLE problems (
     updated_at TIMESTAMP DEFAULT NOW(),     -- 更新时间
     time_limit INT NOT NULL,                -- 时间限制（单位：毫秒）
     memory_limit INT NOT NULL,              -- 内存限制（单位：MB）
+    submit_count INT NOT NULL DEFAULT 0,    -- 提交次数
+    ac_count INT NOT NULL DEFAULT 0,        -- 通过次数
     author_id INT REFERENCES users(id) ON DELETE SET NULL, -- 作者（可选）
     is_public BOOLEAN DEFAULT TRUE          -- 是否公开
 );
 """
 
+# 关联表 users 和 ac 的 problems
+join_user_ac_problems = """
+CREATE TABLE user_problems (
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    problem_id INT REFERENCES problems(id) ON DELETE CASCADE,
+    ac_time TIMESTAMP DEFAULT NOW(),
+    PRIMARY KEY (user_id, problem_id)
+);
+"""
 cursor = conn.cursor()
 ls = [create_user_table, create_user_profiles, create_user_statistics, create_permission, create_user_permissions,
-      create_question_data]
+      create_question_data, join_user_ac_problems]
 for i in ls:
     cursor.execute(i)
 conn.commit()
