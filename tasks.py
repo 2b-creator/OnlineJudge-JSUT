@@ -4,7 +4,11 @@ import os
 import shutil
 from pathlib import Path
 
-celery_app = Celery('tasks', broker='redis://localhost:6379/0')
+celery_app = Celery(
+    'tasks',
+    broker='redis://localhost:6379/0',
+    result_backend='redis://localhost:6379/0'  # 使用 Redis 作为结果存储
+)
 
 
 def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_file, test_id):
@@ -72,7 +76,7 @@ def judge_work(problem_id, user_id, code, language):
         code_dir.mkdir(parents=True, exist_ok=True)
         code_file = code_dir / f"{user_id}.{language}"
         container_code_dir = "/sandbox"
-        docker_image = "gcc_sandbox"
+        docker_image = "sandbox"
         with open(code_file, 'w') as f:
             f.write(code)
 
@@ -118,6 +122,8 @@ def judge_work(problem_id, user_id, code, language):
                     continue
                 test_results.append(
                     run_py(code_file.name, code_dir, docker_image, test_file, expected_output_file, test_id))
+                print(test_results)
+            return {"status": "completed", "results": test_results}
 
         else:
             return {"status": "error", "message": f"Unsupported language: {language}"}

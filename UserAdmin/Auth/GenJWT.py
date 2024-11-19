@@ -27,8 +27,9 @@ def validate_token(token, user_id):
 def get_username(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-        return payload["user_id"]
+        return payload["username"]
     except jwt.ExpiredSignatureError:
         return 1
     except jwt.InvalidTokenError:
         return 2
+

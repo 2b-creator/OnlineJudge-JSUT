@@ -17,7 +17,7 @@ CREATE TABLE users (
     role VARCHAR(20) DEFAULT 'user',      -- 角色（例如：user, admin, moderator）
     is_active BOOLEAN DEFAULT TRUE,       -- 账号是否激活
     ac_num int DEFAULT 0,                 -- ac 题目的数量
-    access_token VARCHAR(100) UNIQUE NOT NULL      --登录时获取 access-token 令牌
+    access_token TEXT UNIQUE NOT NULL      --登录时获取 access-token 令牌
 );
 """
 create_user_profiles = """
@@ -62,6 +62,7 @@ CREATE TABLE user_permissions (
 create_question_data = """
 CREATE TABLE problems (
     id SERIAL PRIMARY KEY,                  -- 题目ID（自增主键）
+    problem_char_id VARCHAR(255) NOT NULL,
     title VARCHAR(255) NOT NULL,            -- 题目标题
     description TEXT NOT NULL,              -- 题目描述
     input_description TEXT NOT NULL,        -- 输入描述

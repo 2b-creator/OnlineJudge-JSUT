@@ -2,6 +2,7 @@ from flask import Flask, request
 
 from Counters.CodeSubmitCounter import add_submit_count
 from Counters.StatisticAccept import record_ac
+from Problems.ProblemOperator import add_problems
 from UserAdmin.Auth.GenJWT import validate_token, get_username
 from UserAdmin.UserLogic import *
 import UserAdmin.UserLogic
@@ -79,6 +80,28 @@ def submit_code():
         else:
             record_ac(username, problem_id, language)
     return jsonify({"code": 200, "message:": "success!", "output": output}), 200
+
+
+@app.route('/api/add_problem', methods=['POST'])
+@require_access_token
+def add_problem():
+    access_token = request.headers.get("access-token")
+    if check_role(get_username(access_token)) != "user":
+        return jsonify({"code": 403, "message": "no privilege"}), 403
+    title = request.json.get("title")
+    problem_char_id = request.json.get("problem_char_id")
+    description = request.json.get("description")
+    input_description = request.json.get("input_description")
+    output_description = request.json.get("output_description")
+    sample_input = request.json.get("sample_input")
+    sample_output = request.json.get("sample_output")
+    difficulty = request.json.get("difficulty")
+    time_limit = request.json.get("time_limit")
+    memory_limit = request.json.get("memory_limit")
+    author_id = get_user_id(get_username(request.headers.get("access-token")))
+    problem_id = add_problems(title, problem_char_id, description, input_description, output_description, sample_input,
+                              sample_output, difficulty, time_limit, memory_limit, author_id)
+    return jsonify({"code": 200, "problem_id": problem_id}), 200
 
 
 if __name__ == "__main__":
