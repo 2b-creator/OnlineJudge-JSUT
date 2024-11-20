@@ -1,15 +1,19 @@
 import psycopg2
 
 
-def add_submit_count(problem_id: int):
+def add_submit_count(problem_char_id: int) -> None:
     conn = psycopg2.connect(database="JsutOJ", user="JsutOJAdmin", password="jsutojadmin", host="127.0.0.1",
                             port="5432")
     cursor = conn.cursor()
-    cursor.execute("SELECT submit_count FROM problems WHERE problem_id = %s", (problem_id,))
+    cursor.execute("SELECT id FROM problems WHERE problem_char_id = %s", (problem_char_id,))
+    problem_id = cursor.fetchone()[0]
+    cursor.execute("SELECT submit_count FROM problems WHERE id = %s", (problem_id,))
     submit_count_get = int(cursor.fetchone()[0]) + 1
-    cursor.execute("UPDATE problems SET submit_count = %s WHERE problem_id = %s", (submit_count_get, problem_id))
+    cursor.execute("UPDATE problems SET submit_count = %s WHERE problem_char_id = %s",
+                   (submit_count_get, problem_char_id))
     conn.commit()
     conn.close()
+
 
 '''
 def add_accept_count(username: str, problem_id: int, language: str):

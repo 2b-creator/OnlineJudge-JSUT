@@ -1,3 +1,7 @@
+import os.path
+from crypt import methods
+from pathlib import Path
+
 from flask import Flask, request
 
 from Counters.CodeSubmitCounter import add_submit_count
@@ -52,6 +56,8 @@ def user_login():
 @app.route('/api/register', methods=['POST'])
 def register_new():
     username = request.json.get("username")
+    if "-" in username:
+        return jsonify({"code": 401, "message": "'-' cannot in username!"}), 401
     stu_id = request.json.get("stu_id")
     password_hash_cm = request.json.get("password_hash_cm")
     email_cm = request.json.get("email_cm")
@@ -85,23 +91,95 @@ def submit_code():
 @app.route('/api/add_problem', methods=['POST'])
 @require_access_token
 def add_problem():
+    try:
+        access_token = request.headers.get("access-token")
+        if check_role(get_username(access_token)) != "admin":
+            return jsonify({"code": 403, "message": "no privilege"}), 403
+        title = request.json.get("title")
+        problem_char_id = request.json.get("problem_char_id")
+        description = request.json.get("description")
+        input_description = request.json.get("input_description")
+        output_description = request.json.get("output_description")
+        sample_input = request.json.get("sample_input")
+        sample_output = request.json.get("sample_output")
+        difficulty = request.json.get("difficulty")
+        time_limit = request.json.get("time_limit")
+        memory_limit = request.json.get("memory_limit")
+        author_id = get_user_id(get_username(request.headers.get("access-token")))
+        problem_id = add_problems(title, problem_char_id, description, input_description, output_description,
+                                  sample_input,
+                                  sample_output, difficulty, time_limit, memory_limit, author_id)
+        return jsonify({"code": 200, "problem_id": problem_id}), 200
+    except Exception as e:
+        return jsonify({"code": 500, "message": f"Internal server error:{str(e)}"})
+
+
+@app.route('/api/add_problem/upload_sample/in', methods=['POST'])
+@require_access_token
+def upload_in_sample():
     access_token = request.headers.get("access-token")
-    if check_role(get_username(access_token)) != "user":
-        return jsonify({"code": 403, "message": "no privilege"}), 403
-    title = request.json.get("title")
-    problem_char_id = request.json.get("problem_char_id")
-    description = request.json.get("description")
-    input_description = request.json.get("input_description")
-    output_description = request.json.get("output_description")
-    sample_input = request.json.get("sample_input")
-    sample_output = request.json.get("sample_output")
-    difficulty = request.json.get("difficulty")
-    time_limit = request.json.get("time_limit")
-    memory_limit = request.json.get("memory_limit")
-    author_id = get_user_id(get_username(request.headers.get("access-token")))
-    problem_id = add_problems(title, problem_char_id, description, input_description, output_description, sample_input,
-                              sample_output, difficulty, time_limit, memory_limit, author_id)
-    return jsonify({"code": 200, "problem_id": problem_id}), 200
+    json_data = request.form.get("json")
+
+    if json_data:
+        import json
+        json_data = json.loads(json_data)
+        problem_char_id = json_data.get('problem_char_id')
+        if check_role(get_username(access_token)) != "admin":
+            return jsonify({"code": 403, "message": "no privilege"}), 403
+        if not os.path.exists(f"./TestSamples/{problem_char_id}"):
+            os.mkdir(f"./TestSamples/{problem_char_id}")
+        code_dir = Path(f"./TestSamples/{problem_char_id}")
+        upload_file = request.files.get("file")
+        if upload_file:
+            ls=[]
+            for in_file in code_dir.glob(f"{problem_char_id}-*.in"):
+                test_id = in_file.stem.split("-")[-1]
+                ls.append(int(test_id))
+            max_current = 0
+            if len(ls) != 0:
+                max_current = max(ls)
+            next_test_id = max_current + 1
+            file_name = f"{problem_char_id}-{next_test_id}.in"
+            upload_file.save(f"./TestSamples/{problem_char_id}/{file_name}")
+            return jsonify({"code": 200, "message": "upload success"}), 200
+        else:
+            return jsonify({'error': 'No file uploaded'}), 400
+    else:
+        return jsonify({"code": 400, "message": "no json data"}), 400
+
+
+@app.route('/api/add_problem/upload_sample/out', methods=['POST'])
+@require_access_token
+def upload_out_sample():
+    access_token = request.headers.get("access-token")
+    json_data = request.form.get("json")
+
+    if json_data:
+        import json
+        json_data = json.loads(json_data)
+        problem_char_id = json_data.get('problem_char_id')
+        if check_role(get_username(access_token)) != "admin":
+            return jsonify({"code": 403, "message": "no privilege"}), 403
+        if not os.path.exists(f"./TestSamples/{problem_char_id}"):
+            os.mkdir(f"./TestSamples/{problem_char_id}")
+        code_dir = Path(f"./TestSamples/{problem_char_id}")
+        upload_file = request.files.get("file")
+        if upload_file:
+            ls=[]
+            for in_file in code_dir.glob(f"{problem_char_id}-*.out"):
+                test_id = in_file.stem.split("-")[-1]
+                ls.append(int(test_id))
+            max_current = 0
+            if len(ls) != 0:
+                max_current = max(ls)
+            next_test_id = max_current + 1
+            file_name = f"{problem_char_id}-{next_test_id}.out"
+            upload_file.save(f"./TestSamples/{problem_char_id}/{file_name}")
+            return jsonify({"code": 200, "message": "upload success"}), 200
+        else:
+            return jsonify({'error': 'No file uploaded'}), 400
+    else:
+        return jsonify({"code": 400, "message": "no json data"}), 400
 
 
 if __name__ == "__main__":

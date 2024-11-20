@@ -84,11 +84,11 @@ CREATE TABLE problems (
 # 关联表 users 和 ac 的 problems
 join_user_ac_problems = """
 CREATE TABLE user_problems (
+    id SERIAL PRIMARY KEY, 
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     problem_id INT REFERENCES problems(id) ON DELETE CASCADE,
     ac_time TIMESTAMP DEFAULT NOW(),
-    ac_lang VARCHAR(20) NOT NULL,
-    PRIMARY KEY (user_id, problem_id)
+    ac_lang VARCHAR(20) NOT NULL
 );
 """
 cursor = conn.cursor()

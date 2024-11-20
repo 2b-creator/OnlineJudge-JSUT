@@ -15,11 +15,11 @@ def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_f
     try:
         with open(test_file) as input_file, open(expected_output_file) as expected_file:
             run_cmd = [
-                "docker", "run", "--rm",
-                "-v", f"{code_dir}:/sandbox",  # 挂载代码目录到 Docker 容器
+                "docker", "run", "--rm", "-i",
+                "-v", f"./{code_dir}:/sandbox",  # 挂载代码目录到 Docker 容器
                 "--memory", "128m",  # 限制内存
                 "--cpus", "0.5",  # 限制 CPU
-                docker_image, f"./{executable}"
+                docker_image, f"/sandbox/{executable}", "<", test_file
             ]
             run_result = subprocess.run(run_cmd, stdin=input_file, capture_output=True, text=True)
             if run_result.returncode != 0:
@@ -44,11 +44,11 @@ def run_py(executable, code_dir, docker_image, test_file, expected_output_file, 
     try:
         with open(test_file) as input_file, open(expected_output_file) as expected_file:
             run_cmd = [
-                "docker", "run", "--rm",
-                "-v", f"{code_dir}:/sandbox",  # 挂载代码目录到 Docker 容器
+                "docker", "run", "--rm", "-i",
+                "-v", f"./{code_dir}:/sandbox",  # 挂载代码目录到 Docker 容器
                 "--memory", "128m",  # 限制内存
                 "--cpus", "0.5",  # 限制 CPU
-                docker_image, f"python3 {executable}"
+                docker_image, f"python3 {executable}", "<", test_file
             ]
             run_result = subprocess.run(run_cmd, timeout=1, stdin=input_file, capture_output=True, text=True)
             if run_result.returncode != 0:
@@ -70,11 +70,11 @@ def run_py(executable, code_dir, docker_image, test_file, expected_output_file, 
 
 
 @celery_app.task
-def judge_work(problem_id, user_id, code, language):
+def judge_work(problem_id, username, code, language):
     try:
-        code_dir = Path(f"./{problem_id}")
+        code_dir = Path(f"./TestSamples/{problem_id}")
         code_dir.mkdir(parents=True, exist_ok=True)
-        code_file = code_dir / f"{user_id}.{language}"
+        code_file = code_dir / f"{username}.{language}"
         container_code_dir = "/sandbox"
         docker_image = "sandbox"
         with open(code_file, 'w') as f:
@@ -82,16 +82,16 @@ def judge_work(problem_id, user_id, code, language):
 
         # cpp
         if language == "cpp":
-            executable = f"{user_id}.out"
+            executable = f"{username}.out"
 
             compile_cmd = [
                 "docker", "run", "--rm",
-                "-v", f"{code_dir}:/sandbox",  # 挂载代码目录到 Docker 容器
+                "-v", f"./{code_dir}:/sandbox",  # 挂载代码目录到 Docker 容器
                 "--memory", "128m",  # 限制内存
                 "--cpus", "0.5",  # 限制 CPU
                 docker_image, "g++",
-                f"{container_code_dir}/{code_file.name}",
-                "-o", f"{container_code_dir}/{executable}"
+                f"/sandbox/{code_file.name}",
+                "-o", f"/sandbox/{executable}"
             ]
             compile_result = subprocess.run(compile_cmd, capture_output=True, text=True)
             if compile_result.returncode != 0:
