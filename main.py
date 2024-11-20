@@ -1,13 +1,13 @@
 import os.path
-from crypt import methods
 from pathlib import Path
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 from Counters.CodeSubmitCounter import add_submit_count
 from Counters.StatisticAccept import record_ac
 from Problems.ProblemOperator import add_problems
 from UserAdmin.Auth.GenJWT import validate_token, get_username
+from UserAdmin.Interaction import get_detail_user_info
 from UserAdmin.UserLogic import *
 import UserAdmin.UserLogic
 
@@ -131,7 +131,7 @@ def upload_in_sample():
         code_dir = Path(f"./TestSamples/{problem_char_id}")
         upload_file = request.files.get("file")
         if upload_file:
-            ls=[]
+            ls = []
             for in_file in code_dir.glob(f"{problem_char_id}-*.in"):
                 test_id = in_file.stem.split("-")[-1]
                 ls.append(int(test_id))
@@ -165,7 +165,7 @@ def upload_out_sample():
         code_dir = Path(f"./TestSamples/{problem_char_id}")
         upload_file = request.files.get("file")
         if upload_file:
-            ls=[]
+            ls = []
             for in_file in code_dir.glob(f"{problem_char_id}-*.out"):
                 test_id = in_file.stem.split("-")[-1]
                 ls.append(int(test_id))
@@ -180,6 +180,15 @@ def upload_out_sample():
             return jsonify({'error': 'No file uploaded'}), 400
     else:
         return jsonify({"code": 400, "message": "no json data"}), 400
+
+
+@app.route('/api/users', methods=['POST'])
+def get_userinfo():
+    username = request.args.get("username")
+    data = get_detail_user_info(username)
+    if data.get("data") is not None:
+        return jsonify({"code": 200, "data": data}), 200
+    return jsonify({"code": 404, "data": "user not found!"}), 404
 
 
 if __name__ == "__main__":

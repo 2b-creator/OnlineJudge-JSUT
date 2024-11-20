@@ -1,5 +1,4 @@
 import psycopg2
-from flask import jsonify
 import UserAdmin.Auth.GenJWT
 
 

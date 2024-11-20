@@ -1,7 +1,5 @@
 from celery import Celery
 import subprocess
-import os
-import shutil
 from pathlib import Path
 
 celery_app = Celery(

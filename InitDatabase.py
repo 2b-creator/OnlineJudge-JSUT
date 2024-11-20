@@ -91,9 +91,33 @@ CREATE TABLE user_problems (
     ac_lang VARCHAR(20) NOT NULL
 );
 """
+
+create_competition_table = """
+CREATE TABLE competition (
+    id SERIAL PRIMARY KEY,
+    problems TEXT NOT NULL,
+    TITLE VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    strict_lang VARCHAR(20),
+    start_at TIMESTAMP,
+    finish_at TIMESTAMP
+)
+"""
+
+create_user_competition = """
+CREATE TABLE user_competition (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    competition_id INT REFERENCES competition(id) ON DELETE CASCADE,
+    ac_list TEXT,
+    submit_count INT NOT NULL DEFAULT 0
+)
+"""
+
 cursor = conn.cursor()
 ls = [create_user_table, create_user_profiles, create_user_statistics, create_permission, create_user_permissions,
-      create_question_data, join_user_ac_problems]
+      create_question_data, join_user_ac_problems, create_competition_table, create_user_competition]
 for i in ls:
     cursor.execute(i)
 conn.commit()
