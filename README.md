@@ -88,7 +88,13 @@ host    JsutOJ      JsutOJAdmin     ::1/128     md5
 
 ### 拉取源码并初始化项目
 (此后的步骤均可直接运行快速安装脚本)
+#### 快速搭建
+Ubuntu:
+```shell
+curl -fsSL https://raw.githubusercontent.com/2b-creator/OnlineJudge-JSUT/refs/heads/main/ubuntu-install.sh | bash
+```
 
+#### 手动搭建
 运行命令:
 
 ```shell
