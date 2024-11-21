@@ -29,11 +29,11 @@ def require_access_token(f):
             return jsonify({"message": "Access token is missing"}), 401
 
         # 这里可以添加自己的逻辑来验证 token 是否有效
-        # 比如，假设有效的 token 为 "valid_token"
+        # 比如, 假设有效的 token 为 "valid_token"
         if isinstance(get_username(access_token), int):
             return jsonify({"message": "Invalid access token"}), 403
 
-        # 如果验证通过，继续执行原始函数
+        # 如果验证通过, 继续执行原始函数
         return f(*args, **kwargs)
 
     return decorated_function

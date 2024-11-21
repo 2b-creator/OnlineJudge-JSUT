@@ -1,3 +1,3 @@
 CREATE DATABASE JsutOJ
 ENCODING 'UTF8'
-OWNER synapse_user;
+OWNER JsutOJAdmin;

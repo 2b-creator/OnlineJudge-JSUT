@@ -1,7 +1,10 @@
 import psycopg2
+import UserAdmin.UserLogic
 from SerialToml import *
+from UserAdmin.Auth.md5s import md5_encrypt
+
 conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
-                            port=port)
+                        port=port)
 
 # 首先对用户创建用户数据表
 
@@ -10,7 +13,7 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,                -- 用户ID（自增主键）
     stu_id VARCHAR(50) UNIQUE NOT NULL,   -- 学号
     username VARCHAR(50) UNIQUE NOT NULL, -- 用户名
-    nickname VARCHAR(50),                 -- 昵称，外显名称
+    nickname VARCHAR(50),                 -- 昵称, 外显名称
     password_hash TEXT NOT NULL,          -- 密码（存储哈希值）
     email VARCHAR(100) UNIQUE NOT NULL,   -- 邮箱
     created_at TIMESTAMP DEFAULT NOW(),   -- 注册时间
@@ -122,5 +125,10 @@ ls = [create_user_table, create_user_profiles, create_user_statistics, create_pe
       create_question_data, join_user_ac_problems, create_competition_table, create_user_competition]
 for i in ls:
     cursor.execute(i)
+
+# 加入 root 信息
+password_hash = md5_encrypt(root_password)
+UserAdmin.UserLogic.register(root_username, int(root_stu_id), password_hash, root_email)
+UserAdmin.UserLogic.change_role(root_username, root_role)
 conn.commit()
 conn.close()

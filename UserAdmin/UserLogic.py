@@ -50,6 +50,15 @@ def check_role(username: str) -> str:
     return role
 
 
+def change_role(username: str, role: str) -> None:
+    conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
+                            port=port)
+    cursor = conn.cursor()
+    cursor.execute("UPDATE users SET role = %s WHERE username = %s", (role, username))
+    conn.commit()
+    conn.close()
+
+
 def get_user_id(username: str) -> int:
     conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
                             port=port)

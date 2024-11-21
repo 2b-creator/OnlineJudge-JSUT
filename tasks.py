@@ -93,7 +93,7 @@ def judge_work(problem_id, username, code, language):
             ]
             compile_result = subprocess.run(compile_cmd, capture_output=True, text=True)
             if compile_result.returncode != 0:
-                # 编译失败，返回错误信息
+                # 编译失败, 返回错误信息
                 return {"status": "error", "message": compile_result.stderr}
             # 运行测试用例
             test_results = []
