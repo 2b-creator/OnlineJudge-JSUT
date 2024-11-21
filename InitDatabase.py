@@ -1,6 +1,7 @@
 import psycopg2
-
-conn = psycopg2.connect(database="JsutOJ", user="JsutOJAdmin", password="jsutojadmin", host="127.0.0.1", port="5432")
+from SerialToml import *
+conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
+                            port=port)
 
 # 首先对用户创建用户数据表
 
@@ -111,7 +112,8 @@ CREATE TABLE user_competition (
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     competition_id INT REFERENCES competition(id) ON DELETE CASCADE,
     ac_list TEXT,
-    submit_count INT NOT NULL DEFAULT 0
+    submit_count INT NOT NULL DEFAULT 0,
+    ac_count INT NOT NULL DEFAULT 0
 )
 """
 

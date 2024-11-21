@@ -1,9 +1,9 @@
 import psycopg2
-
+from SerialToml import *
 
 def get_detail_user_info(username: str) -> dict:
-    conn = psycopg2.connect(database="JsutOJ", user="JsutOJAdmin", password="jsutojadmin", host="127.0.0.1",
-                            port="5432")
+    conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
+                            port=port)
     cursor = conn.cursor()
     cursor.execute(
         "SELECT users.nickname, users.ac_num, user_profiles.bio, user_profiles.avatar FROM users JOIN user_profiles ON users.id=user_profiles.user_id WHERE username = %s",

@@ -1,9 +1,9 @@
 import psycopg2
-
+from SerialToml import *
 
 def record_ac(username: str, problem_char_id: str, language: str) -> None:
-    conn = psycopg2.connect(database="JsutOJ", user="JsutOJAdmin", password="jsutojadmin", host="127.0.0.1",
-                            port="5432")
+    conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
+                            port=port)
     cursor = conn.cursor()
     cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
     user_id = cursor.fetchone()[0]
@@ -19,8 +19,8 @@ def record_ac(username: str, problem_char_id: str, language: str) -> None:
 
 
 def list_ac(username: str) -> list[int]:
-    conn = psycopg2.connect(database="JsutOJ", user="JsutOJAdmin", password="jsutojadmin", host="127.0.0.1",
-                            port="5432")
+    conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
+                            port=port)
     cursor = conn.cursor()
     cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
     user_id = cursor.fetchone()[0]

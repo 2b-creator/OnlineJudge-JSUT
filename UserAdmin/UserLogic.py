@@ -1,10 +1,11 @@
 import psycopg2
+from SerialToml import *
 import UserAdmin.Auth.GenJWT
 
 
 def login(username: str, password_hash_cm: str) -> dict:
-    conn = psycopg2.connect(database="JsutOJ", user="JsutOJAdmin", password="jsutojadmin", host="127.0.0.1",
-                            port="5432")
+    conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
+                            port=port)
     cursor = conn.cursor()
     cursor.execute("SELECT password_hash FROM users WHERE username='%s'", (username,))
     password_hash = cursor.fetchone()[0]
@@ -27,8 +28,8 @@ def login(username: str, password_hash_cm: str) -> dict:
 
 
 def register(username: str, stu_id: int, password_hash_cm: str, email_cm: str):
-    conn = psycopg2.connect(database="JsutOJ", user="JsutOJAdmin", password="jsutojadmin", host="127.0.0.1",
-                            port="5432")
+    conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
+                            port=port)
     cursor = conn.cursor()
     access_token = UserAdmin.Auth.GenJWT.generate_token(username)
     cursor.execute(
@@ -40,8 +41,8 @@ def register(username: str, stu_id: int, password_hash_cm: str, email_cm: str):
 
 
 def check_role(username: str) -> str:
-    conn = psycopg2.connect(database="JsutOJ", user="JsutOJAdmin", password="jsutojadmin", host="127.0.0.1",
-                            port="5432")
+    conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
+                            port=port)
     cursor = conn.cursor()
     cursor.execute("SELECT role FROM users WHERE username = %s", (username,))
     role = cursor.fetchone()[0]
@@ -50,8 +51,8 @@ def check_role(username: str) -> str:
 
 
 def get_user_id(username: str) -> int:
-    conn = psycopg2.connect(database="JsutOJ", user="JsutOJAdmin", password="jsutojadmin", host="127.0.0.1",
-                            port="5432")
+    conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
+                            port=port)
     cursor = conn.cursor()
     cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
     user_id = cursor.fetchone()[0]
