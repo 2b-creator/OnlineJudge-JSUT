@@ -73,7 +73,8 @@ CREATE TABLE problems (
     output_description TEXT NOT NULL,       -- 输出描述
     sample_input TEXT,                      -- 样例输入
     sample_output TEXT,                     -- 样例输出
-    difficulty VARCHAR(20) DEFAULT 'easy',  -- 难度等级（easy, medium, hard）
+    difficulty INT DEFAULT 1,  -- 难度等级（easy, medium, hard）
+    tag VARCHAR(20),
     created_at TIMESTAMP DEFAULT NOW(),     -- 创建时间
     updated_at TIMESTAMP DEFAULT NOW(),     -- 更新时间
     time_limit INT NOT NULL,                -- 时间限制（单位：毫秒）
@@ -99,12 +100,12 @@ CREATE TABLE user_problems (
 create_competition_table = """
 CREATE TABLE competition (
     id SERIAL PRIMARY KEY,
-    problems TEXT NOT NULL,
     TITLE VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     strict_lang VARCHAR(20),
-    start_at TIMESTAMP,
+    sign_deter_time TIMESTAMP,
+    start_at TIMESTAMP DEFAULT NOW(),
     finish_at TIMESTAMP
 )
 """
@@ -117,6 +118,14 @@ CREATE TABLE user_competition (
     ac_list TEXT,
     submit_count INT NOT NULL DEFAULT 0,
     ac_count INT NOT NULL DEFAULT 0
+)
+"""
+
+create_problem_competition = """
+CREATE TABLE problem_competition (
+    id SERIAL PRIMARY KEY,
+    problem_id INT REFERENCES problems(id) ON DELETE CASCADE,
+    competition_id INT REFERENCES competition(id) ON DELETE CASCADE
 )
 """
 

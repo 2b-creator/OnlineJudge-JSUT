@@ -7,7 +7,7 @@ def login(username: str, password_hash_cm: str) -> dict:
     conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
                             port=port)
     cursor = conn.cursor()
-    cursor.execute("SELECT password_hash FROM users WHERE username='%s'", (username,))
+    cursor.execute("SELECT password_hash FROM users WHERE username=%s", (username,))
     password_hash = cursor.fetchone()[0]
 
     if password_hash is not None:

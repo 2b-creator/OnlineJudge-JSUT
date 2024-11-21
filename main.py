@@ -1,8 +1,10 @@
 import os.path
+from crypt import methods
 from pathlib import Path
 
 from flask import Flask, request, jsonify
 
+from Competitions.CompetitionOperator import create_competition
 from Counters.CodeSubmitCounter import add_submit_count
 from Counters.StatisticAccept import record_ac
 from Problems.ProblemOperator import add_problems
@@ -189,6 +191,24 @@ def get_userinfo():
     if data.get("data") is not None:
         return jsonify({"code": 200, "data": data}), 200
     return jsonify({"code": 404, "data": "user not found!"}), 404
+
+
+@app.route('/api/create_competition', methods=['POST'])
+@require_access_token
+def add_competition():
+    access_token = request.headers.get("access-token")
+    if check_role(get_username(access_token)) != "admin":
+        return jsonify({"code": 403, "message": "no privilege"}), 403
+    title = request.json.get("title")
+    description = request.json.get("description")
+    start_at = request.json.get("start_at")
+    finish_at = request.json.get("finish_at")
+    sign_deter_time = request.json.get("sign_deter_time")
+    try:
+        create_competition(title, description, start_at, finish_at, sign_deter_time)
+        return jsonify({"code": 200, "message": "success"}), 200
+    except Exception as e:
+        return jsonify({"code": 500, "message": f"Internal server error: {str(e)}"}), 500
 
 
 if __name__ == "__main__":
