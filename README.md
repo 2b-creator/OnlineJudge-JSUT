@@ -105,7 +105,23 @@ cd ./OnlineJudge-JSUT
 ```shell
 pip3 install -r requirements.txt
 ```
-安装完毕后初始化数据库:
+安装完毕后, 请修改根目录下的 `configuration.toml` 信息, 注释也写的很详细了.
+```toml
+[database]
+addr = "127.0.0.1"              # 数据库地址
+port = 5432                     # 端口
+name = "JsutOJ"                 # 数据库名称
+username = "JsutOJAdmin"        # 数据库用户
+password = "jsutojadmin"        # 数据库密码
+
+[root]                          # OJ 超级管理员初始化
+stu_id = "2024243108"           # 学号
+username = "tim"                # 用户名, 作为登录凭据
+nickname = "孙笑川258"           # 昵称, 外部显示
+password = "1145141919810"      # 密码, 保存将以 md5 形式保存
+email = "qjtykr65536@gmail.com" # 邮箱
+```
+然后初始化数据库:
 ```shell
 python3 ./InitDatabase.py
 ```
