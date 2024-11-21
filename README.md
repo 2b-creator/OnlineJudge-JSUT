@@ -107,7 +107,9 @@ cd ./OnlineJudge-JSUT
 ```
 首先运行安装库:
 ```shell
-pip3 install -r requirements.txt
+mkdir .venv
+python -m venv .venv
+./venv/bin/pip -r requirements.txt
 ```
 安装完毕后, 请修改根目录下的 `configuration.toml` 信息, 注释也写的很详细了.
 ```toml
@@ -127,7 +129,7 @@ email = "qjtykr65536@gmail.com" # 邮箱
 ```
 然后初始化数据库:
 ```shell
-python3 ./InitDatabase.py
+./.venv/bin/python3 ./InitDatabase.py
 ```
 
 ### 安装 docker 判题环境
@@ -181,8 +183,8 @@ sudo apt install redis-server
 ```shell
 # 下面三个后台分别启动, 或添加到 systemd 服务
 redis-server
-celery -A tasks worker --loglevel=info
-gunicorn -w 4 main:app
+./.venv/bin/celery -A tasks worker --loglevel=info
+./.venv/bin/gunicorn -w 4 main:app
 ```
 由此完成了搭建流程, 下面是测试脚本
 ```shell

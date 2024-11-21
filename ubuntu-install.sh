@@ -3,7 +3,9 @@
 git clone https://github.com/2b-creator/OnlineJudge-JSUT.git
 cd ./OnlineJudge-JSUT || exit
 root_dir=$(pwd)
-pip3 install -r requirements.txt
+mkdir .venv
+python -m venv .venv
+./venv/bin/pip -r requirements.txt
 
 #安装前先卸载操作系统默认安装的docker，
 sudo apt-get remove docker docker-engine docker.io containerd runc
@@ -45,7 +47,7 @@ After=network.target
 
 [Service]
 Environment=\"$root_dir\"
-ExecStart=gunicorn -w 4 main:app
+ExecStart=$root_dir/.venv/gunicorn -w 4 main:app
 WorkingDirectory=$root_dir
 StandardOutput=journal
 StandardError=journal
@@ -62,7 +64,7 @@ After=network.target
 
 [Service]
 Environment=\"$root_dir\"
-ExecStart=celery -A tasks worker --loglevel=info
+ExecStart=$root_dir/.venv/celery -A tasks worker --loglevel=info
 WorkingDirectory=$root_dir
 StandardOutput=journal
 StandardError=journal

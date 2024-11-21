@@ -131,9 +131,11 @@ CREATE TABLE problem_competition (
 
 cursor = conn.cursor()
 ls = [create_user_table, create_user_profiles, create_user_statistics, create_permission, create_user_permissions,
-      create_question_data, join_user_ac_problems, create_competition_table, create_user_competition]
+      create_question_data, join_user_ac_problems, create_competition_table, create_user_competition,
+      create_problem_competition]
 for i in ls:
     cursor.execute(i)
+    conn.commit()
 
 # 加入 root 信息
 password_hash = md5_encrypt(root_password)
