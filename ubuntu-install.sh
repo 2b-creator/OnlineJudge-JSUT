@@ -73,7 +73,7 @@ Group=your_group
 
 [Install]
 WantedBy=multi-user.target" | sudo tee /etc/systemd/system/tasks_celery.service > /dev/null
-
+sudo apt install redis-server
 sudo systemctl enable --now tasks_celery.service
 sudo systemctl enable --now oj_flask.service
 sudo systemctl enable --now redis

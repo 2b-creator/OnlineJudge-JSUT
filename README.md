@@ -153,3 +153,22 @@ groupadd -f docker
 ```shell
 docker build -t sandbox .
 ```
+### 添加 redis 队列服务器
+```shell
+sudo apt install redis-server
+```
+### 启动 redis, celery, 主程序
+```shell
+# 下面三个后台分别启动, 或添加到 systemd 服务
+redis-server
+celery -A tasks worker --loglevel=info
+gunicorn -w 4 main:app
+```
+由此完成了搭建流程, 下面是测试脚本
+```shell
+curl -X GET http://127.0.0.1:8000 
+```
+如果输出 `hello world`, 恭喜你搭建成功!
+
+## 反向代理(可选)
+(To Be Continued)
