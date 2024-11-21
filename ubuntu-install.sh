@@ -4,7 +4,6 @@ git clone https://github.com/2b-creator/OnlineJudge-JSUT.git
 cd ./OnlineJudge-JSUT || exit
 root_dir=$(pwd)
 pip3 install -r requirements.txt
-python3 ./InitDatabase.py
 
 #安装前先卸载操作系统默认安装的docker，
 sudo apt-get remove docker docker-engine docker.io containerd runc
@@ -74,6 +73,7 @@ Group=your_group
 [Install]
 WantedBy=multi-user.target" | sudo tee /etc/systemd/system/tasks_celery.service > /dev/null
 sudo apt install redis-server
+
 sudo systemctl enable --now tasks_celery.service
 sudo systemctl enable --now oj_flask.service
 sudo systemctl enable --now redis

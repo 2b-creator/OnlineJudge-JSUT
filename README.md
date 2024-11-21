@@ -93,6 +93,10 @@ Ubuntu:
 ```shell
 curl -fsSL https://raw.githubusercontent.com/2b-creator/OnlineJudge-JSUT/refs/heads/main/ubuntu-install.sh | bash
 ```
+然后更改根目录下的 `configuration.toml` 注释写的很详细了. 更改完毕后运行
+```shell
+python3 ./InitDatabase.py
+```
 
 #### 手动搭建
 运行命令:
