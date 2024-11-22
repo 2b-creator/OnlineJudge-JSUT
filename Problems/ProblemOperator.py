@@ -23,7 +23,7 @@ def get_question(start: int, num: int) -> dict[str, list]:
                             port=port)
     cursor = conn.cursor()
     cursor.execute("SELECT (title, tag) FROM problems WHERE is_public = TRUE ORDER BY id LIMIT %s OFFSET %s;",
-                   (start, num))
+                   (num, start))
     res = cursor.fetchall()
     ls = []
     for i in res:
