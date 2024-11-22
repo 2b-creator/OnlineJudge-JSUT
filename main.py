@@ -13,7 +13,10 @@ from UserAdmin.Interaction import get_detail_user_info
 from UserAdmin.UserLogic import *
 import UserAdmin.UserLogic
 
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)  # 允许所有来源的请求
+
 
 from functools import wraps
 from tasks import judge_work
