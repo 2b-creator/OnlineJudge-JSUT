@@ -30,4 +30,4 @@ def get_question(start: int, num: int) -> dict[str, list]:
         tp = i[0][1:-1].split(",")
         dic = {"title": tp[0], "tag": tp[1]}
         ls.append(dic)
-    return {"data": ls}
+    return {"datas": ls}
