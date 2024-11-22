@@ -7,7 +7,7 @@ from flask import Flask, request, jsonify
 from Competitions.CompetitionOperator import create_competition
 from Counters.CodeSubmitCounter import add_submit_count
 from Counters.StatisticAccept import record_ac
-from Problems.ProblemOperator import add_problems
+from Problems.ProblemOperator import add_problems, get_question
 from UserAdmin.Auth.GenJWT import validate_token, get_username
 from UserAdmin.Interaction import get_detail_user_info
 from UserAdmin.UserLogic import *
@@ -209,6 +209,14 @@ def add_competition():
         return jsonify({"code": 200, "message": "success"}), 200
     except Exception as e:
         return jsonify({"code": 500, "message": f"Internal server error: {str(e)}"}), 500
+
+
+@app.route('/api/get_problems', methods=['GET'])
+def get_problems():
+    page = request.args.get("page")
+    start = int(page) * 20
+    dic = get_question(start, 20)
+    return jsonify(dic), 200
 
 
 if __name__ == "__main__":
