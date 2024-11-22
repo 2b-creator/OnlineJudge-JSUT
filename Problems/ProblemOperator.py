@@ -1,6 +1,4 @@
 import psycopg2
-
-from InitDatabase import cursor
 from SerialToml import *
 
 
