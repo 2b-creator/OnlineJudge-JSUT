@@ -7,16 +7,16 @@ from flask import Flask, request, jsonify
 from Competitions.CompetitionOperator import create_competition
 from Counters.CodeSubmitCounter import add_submit_count
 from Counters.StatisticAccept import record_ac
-from Problems.ProblemOperator import add_problems, get_question
+from Problems.ProblemOperator import add_problems, get_question, get_question_detail
 from UserAdmin.Auth.GenJWT import validate_token, get_username
 from UserAdmin.Interaction import get_detail_user_info
 from UserAdmin.UserLogic import *
 import UserAdmin.UserLogic
 
 from flask_cors import CORS
+
 app = Flask(__name__)
 CORS(app)  # 允许所有来源的请求
-
 
 from functools import wraps
 from tasks import judge_work
@@ -221,6 +221,13 @@ def get_problems():
     start = int(page) * 20 - 20
     dic = get_question(start, 20)
     return jsonify(dic), 200
+
+
+@app.route('/api/get_problem_detail')
+def get_problem_detail():
+    id = int(request.args.get("id"))
+    dic = get_question_detail(id)
+    return jsonify({"code": 200, "data": dic}), 200
 
 
 if __name__ == "__main__":
