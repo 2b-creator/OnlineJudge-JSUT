@@ -29,6 +29,6 @@ def get_question(start: int, num: int) -> dict[str, list]:
     for i in res:
         print(i[0])
     return {"data": ls}
-        dic = {"title": i[0], "tag": i[1]}
-        ls.append(dic)
-    return {"data": ls}
+    #     dic = {"title": i[0], "tag": i[1]}
+    #     ls.append(dic)
+    # return {"data": ls}
