@@ -27,8 +27,7 @@ def get_question(start: int, num: int) -> dict[str, list]:
     res = cursor.fetchall()
     ls = []
     for i in res:
-        print(i[0])
+        tp = i[0]
+        dic = {"title": tp[0], "tag": tp[1]}
+        ls.append(dic)
     return {"data": ls}
-    #     dic = {"title": i[0], "tag": i[1]}
-    #     ls.append(dic)
-    # return {"data": ls}
