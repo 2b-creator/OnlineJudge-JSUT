@@ -24,10 +24,10 @@ def get_question(start: int, num: int) -> dict[str, list]:
     cursor = conn.cursor()
     cursor.execute("SELECT (title, tag) FROM problems WHERE is_public = TRUE ORDER BY id LIMIT %s OFFSET %s;",
                    (num, start))
-    res = cursor.fetchall()
+    res: list[tuple[str]] = cursor.fetchall()
     ls = []
     for i in res:
-        tp = eval(i[0])
+        tp = i[0][1:-1].split(",")
         dic = {"title": tp[0], "tag": tp[1]}
         ls.append(dic)
     return {"data": ls}
