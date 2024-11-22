@@ -31,7 +31,7 @@ def register(username: str, stu_id: int, password_hash_cm: str, email_cm: str):
     conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
                             port=port)
     cursor = conn.cursor()
-    access_token = UserAdmin.Auth.GenJWT.generate_token(username)
+    access_token = UserAdmin.Auth.GenJWT.generate_token(username)[0]
     cursor.execute(
         "INSERT INTO users (username, stu_id, password_hash, email, access_token) VALUES (%s, %s, %s, %s, %s)",
         (username, stu_id, password_hash_cm, email_cm, access_token))

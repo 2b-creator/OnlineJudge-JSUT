@@ -214,7 +214,7 @@ def add_competition():
 @app.route('/api/get_problems', methods=['GET'])
 def get_problems():
     page = request.args.get("page")
-    start = int(page) * 20
+    start = int(page) * 20 - 20
     dic = get_question(start, 20)
     return jsonify(dic), 200
 
