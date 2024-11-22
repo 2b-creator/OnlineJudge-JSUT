@@ -11,7 +11,7 @@ def add_problems(title, problem_char_id, description, input_description, output_
     cursor.execute(
         "INSERT INTO problems (title, problem_char_id, description, input_description, output_description, sample_input, sample_output, difficulty, time_limit, memory_limit, author_id, tag) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
         (title, problem_char_id, description, input_description, output_description, sample_input, sample_output,
-         difficulty, time_limit, memory_limit, author_id))
+         difficulty, time_limit, memory_limit, author_id, tag))
     problem_id = cursor.fetchone()[0]
     conn.commit()
     conn.close()
