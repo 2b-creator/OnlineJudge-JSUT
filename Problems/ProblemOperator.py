@@ -28,6 +28,7 @@ def get_question(start: int, num: int) -> dict[str, list]:
     ls = []
     for i in res:
         if len(i) < 2 or i[1] is None:  # 如果元组中没有足够的元素或 tag 为空
+            print(res)
             print(f"警告: 查询结果中的元组 {i} 不完整或 tag 为 NULL，跳过此行")
             continue
         dic = {"title": i[0], "tag": i[1]}
