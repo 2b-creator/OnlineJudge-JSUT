@@ -74,7 +74,7 @@ CREATE TABLE problems (
     sample_input TEXT,                      -- 样例输入
     sample_output TEXT,                     -- 样例输出
     difficulty INT DEFAULT 1,  -- 难度等级（easy, medium, hard）
-    tag VARCHAR(20),
+    tag VARCHAR(20) NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),     -- 创建时间
     updated_at TIMESTAMP DEFAULT NOW(),     -- 更新时间
     time_limit INT NOT NULL,                -- 时间限制（单位：毫秒）

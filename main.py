@@ -107,10 +107,11 @@ def add_problem():
         difficulty = request.json.get("difficulty")
         time_limit = request.json.get("time_limit")
         memory_limit = request.json.get("memory_limit")
+        tag = request.json.get("tag")
         author_id = get_user_id(get_username(request.headers.get("access-token")))
         problem_id = add_problems(title, problem_char_id, description, input_description, output_description,
                                   sample_input,
-                                  sample_output, difficulty, time_limit, memory_limit, author_id)
+                                  sample_output, difficulty, time_limit, memory_limit, author_id, tag)
         return jsonify({"code": 200, "problem_id": problem_id}), 200
     except Exception as e:
         return jsonify({"code": 500, "message": f"Internal server error:{str(e)}"})
