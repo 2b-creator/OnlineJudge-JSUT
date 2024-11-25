@@ -32,10 +32,10 @@ def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_f
                     return {"test_id": test_id, "status": "failed", "expected": expected_output,
                             "actual": actual_output}
     except subprocess.TimeoutExpired:
-        return {"status": "error", "message": "Time limit exceeded"}
+        return {"test_id": test_id, "status": "error", "message": "Time limit exceeded"}
     except subprocess.CalledProcessError as e:
         if "memory" in e.stderr.lower():
-            return {"status": "error", "message": "Memory limit exceeded"}
+            return {"test_id": test_id, "status": "error", "message": "Memory limit exceeded"}
 
 
 def run_py(executable, code_dir, docker_image, test_file, expected_output_file, test_id):
