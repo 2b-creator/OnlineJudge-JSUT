@@ -1,7 +1,7 @@
-curl -X POST http://127.0.0.1:5000/api/submit \
--H "Content-Type: application/json" -H "access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN4YyIsImV4cCI6MTczMjE5Njc0OX0.Q2PelgrWKlLBjH1iMZyUgyfK6LcYizZfu_9DXlpvhD4" \
+curl -X POST http://192.168.1.107:8000/api/submit \
+-H "Content-Type: application/json" -H "access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpbSIsImV4cCI6MTczMjcxNTc2Nn0.DDV_i93CELcFStUZUH7bf5nS2evA-fQC8qy3bb0JXfY" \
 -d '{
-  "problem_id": "sum",
+  "id": 7,
   "code": "#include <stdio.h>\nint main(){int a=1,b=2; scanf(\"%d %d\",&a,&b); printf(\"%d\",a+b);}",
   "language": "cpp"
 }'

@@ -54,7 +54,8 @@ def get_question_by_chars(problem_char_id: str) -> int:
     res = cursor.fetchone()[0]
     return int(res)
 
-def get_question_char_by_id(problem_id:int)->str:
+
+def get_question_char_by_id(problem_id: int) -> str:
     conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
                             port=port)
     cursor = conn.cursor()
