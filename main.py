@@ -75,7 +75,7 @@ def register_new():
 @app.route('/api/submit', methods=['POST'])
 @require_access_token
 def submit_code():
-    problem_id = request.json.get("problem_id")
+    problem_id = request.json.get("id")
     username = get_username(request.headers.get("access-token"))
     code = request.json.get("code")
     language = request.json.get("language")
