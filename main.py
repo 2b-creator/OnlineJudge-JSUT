@@ -7,7 +7,7 @@ from flask import Flask, request, jsonify
 from Competitions.CompetitionOperator import create_competition
 from Counters.CodeSubmitCounter import add_submit_count
 from Counters.StatisticAccept import record_ac
-from Problems.ProblemOperator import add_problems, get_question, get_question_detail, get_question_by_chars, \
+from Problems.ProblemOperator import add_problems, get_question, get_question_detail, \
     get_question_char_by_id
 from UserAdmin.Auth.GenJWT import validate_token, get_username
 from UserAdmin.Interaction import get_detail_user_info
@@ -88,10 +88,10 @@ def submit_code():
     else:
         for i in output["results"]:
             if i["status"] != "success":
-                add_submit_count(problem_id)
+                add_submit_count(problem_char_id)
                 break
         else:
-            record_ac(username, problem_id, language)
+            record_ac(username, problem_char_id, language)
     return jsonify({"code": 200, "message:": "success!", "output": output}), 200
 
 

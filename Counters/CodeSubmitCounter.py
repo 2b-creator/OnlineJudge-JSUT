@@ -1,7 +1,7 @@
 import psycopg2
 from SerialToml import *
 
-def add_submit_count(problem_char_id: int) -> None:
+def add_submit_count(problem_char_id: str) -> None:
     conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
                             port=port)
     cursor = conn.cursor()
