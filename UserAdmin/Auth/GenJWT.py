@@ -21,7 +21,8 @@ def validate_token(token, user_id):
         print("Token has expired")
     except jwt.InvalidTokenError:
         print("Invalid token")
-    return False
+    finally:
+        return False
 
 
 def get_username(token: str):
