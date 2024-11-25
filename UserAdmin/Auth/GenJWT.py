@@ -33,3 +33,5 @@ def get_username(token: str):
     except jwt.InvalidTokenError:
         return 2
 
+if __name__=="__main__":
+    print(generate_token("tim"))

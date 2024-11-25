@@ -45,3 +45,11 @@ def get_question_detail(problem_id: int) -> dict:
     dic = {key: res[i] for i, key in enumerate(col)}
     return dic
 
+
+def get_question_by_chars(problem_char_id: str) -> int:
+    conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
+                            port=port)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM problems WHERE problem_char_id = %s", (problem_char_id,))
+    res = cursor.fetchone()[0]
+    return int(res)
