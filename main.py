@@ -7,7 +7,8 @@ from flask import Flask, request, jsonify
 from Competitions.CompetitionOperator import create_competition
 from Counters.CodeSubmitCounter import add_submit_count
 from Counters.StatisticAccept import record_ac
-from Problems.ProblemOperator import add_problems, get_question, get_question_detail
+from Problems.ProblemOperator import add_problems, get_question, get_question_detail, get_question_by_chars, \
+    get_question_char_by_id
 from UserAdmin.Auth.GenJWT import validate_token, get_username
 from UserAdmin.Interaction import get_detail_user_info
 from UserAdmin.UserLogic import *
@@ -78,7 +79,8 @@ def submit_code():
     username = get_username(request.headers.get("access-token"))
     code = request.json.get("code")
     language = request.json.get("language")
-    task = judge_work.delay(problem_id, username, code, language)
+    problem_char_id = get_question_char_by_id(problem_id)
+    task = judge_work.delay(problem_char_id, username, code, language)
     output = task.get()
 
     if task.failed():

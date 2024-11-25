@@ -53,3 +53,11 @@ def get_question_by_chars(problem_char_id: str) -> int:
     cursor.execute("SELECT id FROM problems WHERE problem_char_id = %s", (problem_char_id,))
     res = cursor.fetchone()[0]
     return int(res)
+
+def get_question_char_by_id(problem_id:int)->str:
+    conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
+                            port=port)
+    cursor = conn.cursor()
+    cursor.execute("SELECT problem_char_id FROM problems WHERE id = %s", (problem_id,))
+    res = cursor.fetchone()[0]
+    return res
