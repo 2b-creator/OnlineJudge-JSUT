@@ -50,6 +50,11 @@ def index():
     return "hello world"
 
 
+@app.route('/api/version', methods=['GET'])
+def get_version():
+    return jsonify({"code": 200, "version": 1.0}), 200
+
+
 @app.route('/api/login', methods=['POST'])
 def user_login():
     username = request.json.get("username")
@@ -107,16 +112,12 @@ def add_problem():
         description = request.json.get("description")
         input_description = request.json.get("input_description")
         output_description = request.json.get("output_description")
-        sample_input = request.json.get("sample_input")
-        sample_output = request.json.get("sample_output")
         difficulty = request.json.get("difficulty")
         time_limit = request.json.get("time_limit")
         memory_limit = request.json.get("memory_limit")
         tag = request.json.get("tag")
         author_id = get_user_id(get_username(request.headers.get("access-token")))
-        problem_id = add_problems(title, problem_char_id, description, input_description, output_description,
-                                  sample_input,
-                                  sample_output, difficulty, time_limit, memory_limit, author_id, tag)
+        problem_id = add_problems(title, problem_char_id, description, input_description, output_description, difficulty, time_limit, memory_limit, author_id, tag)
         return jsonify({"code": 200, "problem_id": problem_id}), 200
     except Exception as e:
         return jsonify({"code": 500, "message": f"Internal server error:{str(e)}"})
@@ -227,8 +228,8 @@ def get_problems():
 
 @app.route('/api/get_problem_detail')
 def get_problem_detail():
-    id = int(request.args.get("id"))
-    dic = get_question_detail(id)
+    problem_id = int(request.args.get("id"))
+    dic = get_question_detail(problem_id)
     return jsonify({"code": 200, "data": dic}), 200
 
 

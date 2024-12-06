@@ -7,7 +7,7 @@ mkdir .venv
 python -m venv .venv
 ./venv/bin/pip -r requirements.txt
 
-#安装前先卸载操作系统默认安装的docker，
+#安装前先卸载操作系统默认安装的docker,
 sudo apt-get remove docker docker-engine docker.io containerd runc
 #安装必要支持
 sudo apt install apt-transport-https ca-certificates curl software-properties-common gnupg lsb-release

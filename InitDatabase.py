@@ -71,8 +71,6 @@ CREATE TABLE problems (
     description TEXT NOT NULL,              -- 题目描述
     input_description TEXT NOT NULL,        -- 输入描述
     output_description TEXT NOT NULL,       -- 输出描述
-    sample_input TEXT,                      -- 样例输入
-    sample_output TEXT,                     -- 样例输出
     difficulty INT DEFAULT 1,  -- 难度等级（easy, medium, hard）
     tag VARCHAR(20) NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),     -- 创建时间
@@ -126,6 +124,15 @@ CREATE TABLE problem_competition (
     id SERIAL PRIMARY KEY,
     problem_id INT REFERENCES problems(id) ON DELETE CASCADE,
     competition_id INT REFERENCES competition(id) ON DELETE CASCADE
+)
+"""
+
+sample_table = """
+CREATE TABLE test_samples (
+    id SERIAL PRIMARY KEY,
+    sample_in TEXT,
+    sample_out TEXT,
+    problem_id INT REFERENCES problems(id) ON DELETE CASCADE
 )
 """
 
