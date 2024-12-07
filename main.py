@@ -1,5 +1,4 @@
 import os.path
-from crypt import methods
 from pathlib import Path
 from flask import Flask, request, jsonify
 
@@ -8,7 +7,7 @@ from Counters.CodeSubmitCounter import add_submit_count
 from Counters.StatisticAccept import record_ac
 from Problems.ProblemOperator import add_problems, get_question, get_question_detail, \
     get_question_char_by_id
-from UserAdmin.Auth.GenJWT import validate_token, get_username
+from UserAdmin.Auth.GenJWT import get_username
 from UserAdmin.Interaction import get_detail_user_info
 from UserAdmin.UserLogic import *
 import UserAdmin.UserLogic

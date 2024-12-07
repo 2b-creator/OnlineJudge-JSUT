@@ -1,7 +1,7 @@
 import psycopg2
 from SerialToml import *
 
-def aget_detail_user_info(username: str) -> dict:
+def get_detail_user_info(username: str) -> dict:
     conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
                             port=port)
     cursor = conn.cursor()
