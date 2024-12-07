@@ -89,3 +89,41 @@ data 字段体
 ```
 
 需要注意的是, data 段中可能包含 latex 语法, 中途的反斜杠只需转义一次.
+
+## GET /api/users
+
+根据 `username` 获取用户详细信息，需要指定查询参数 `username`，例如:
+
+```
+GET	/api/get_problem_detail?username=dddsx
+```
+
+### 响应体
+
+| code | data                         |
+| ---- | ---------------------------- |
+| 200  | 字典, 表示问题的详细表示方法 |
+
+data 字段体
+
+| 字段     | 含义     |
+| -------- | -------- |
+| nickname | 昵称     |
+| ac_num   | ac数量   |
+| bio      | 简介     |
+| avatar   | 输出描述 |
+
+### `JSON` 示例
+
+```json
+{
+    "code": 200,
+    "data": {
+        "nickname": "孙笑川258",
+        "ac_num": 258,
+        "bio": "我这个人是非常儒雅随和的一个人",
+        "avatar": "https://avatar.sunxiaochuan.com/avatars.png"
+    }
+}
+```
+

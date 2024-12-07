@@ -1,7 +1,6 @@
 import os.path
 from crypt import methods
 from pathlib import Path
-
 from flask import Flask, request, jsonify
 
 from Competitions.CompetitionOperator import create_competition
@@ -84,8 +83,11 @@ def submit_code():
     username = get_username(request.headers.get("access-token"))
     code = request.json.get("code")
     language = request.json.get("language")
+    dic = get_question_detail(problem_id)
+    time_limit = dic["time_limit"]
+    m_limit = dic["memory_limit"]
     problem_char_id = get_question_char_by_id(problem_id)
-    task = judge_work.delay(problem_char_id, username, code, language)
+    task = judge_work.delay(problem_char_id, username, code, language, time_limit)
     output = task.get()
 
     if task.failed():
@@ -117,7 +119,8 @@ def add_problem():
         memory_limit = request.json.get("memory_limit")
         tag = request.json.get("tag")
         author_id = get_user_id(get_username(request.headers.get("access-token")))
-        problem_id = add_problems(title, problem_char_id, description, input_description, output_description, difficulty, time_limit, memory_limit, author_id, tag)
+        problem_id = add_problems(title, problem_char_id, description, input_description, output_description,
+                                  difficulty, time_limit, memory_limit, author_id, tag)
         return jsonify({"code": 200, "problem_id": problem_id}), 200
     except Exception as e:
         return jsonify({"code": 500, "message": f"Internal server error:{str(e)}"})
@@ -191,7 +194,7 @@ def upload_out_sample():
         return jsonify({"code": 400, "message": "no json data"}), 400
 
 
-@app.route('/api/users', methods=['POST'])
+@app.route('/api/users', methods=['GET'])
 def get_userinfo():
     username = request.args.get("username")
     data = get_detail_user_info(username)

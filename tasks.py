@@ -9,7 +9,7 @@ celery_app = Celery(
 )
 
 
-def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_file, test_id):
+def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_file, test_id,time_limit):
     try:
         with open(test_file) as input_file, open(expected_output_file) as expected_file:
             run_cmd = [
@@ -19,7 +19,7 @@ def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_f
                 "--cpus", "0.5",  # 限制 CPU
                 docker_image, f"/sandbox/{executable}", "<", test_file
             ]
-            run_result = subprocess.run(run_cmd, stdin=input_file, capture_output=True, text=True)
+            run_result = subprocess.run(run_cmd, stdin=input_file, capture_output=True, text=True,timeout=time_limit)
             if run_result.returncode != 0:
                 # 运行失败
                 return {"test_id": test_id, "status": "error", "message": run_result.stderr}
@@ -38,7 +38,7 @@ def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_f
             return {"test_id": test_id, "status": "error", "message": "Memory limit exceeded"}
 
 
-def run_py(executable, code_dir, docker_image, test_file, expected_output_file, test_id):
+def run_py(executable, code_dir, docker_image, test_file, expected_output_file, test_id,time_limit):
     try:
         with open(test_file) as input_file, open(expected_output_file) as expected_file:
             run_cmd = [
@@ -48,7 +48,7 @@ def run_py(executable, code_dir, docker_image, test_file, expected_output_file, 
                 "--cpus", "0.5",  # 限制 CPU
                 docker_image, f"python3 {executable}", "<", test_file
             ]
-            run_result = subprocess.run(run_cmd, timeout=1, stdin=input_file, capture_output=True, text=True)
+            run_result = subprocess.run(run_cmd, timeout=time_limit, stdin=input_file, capture_output=True, text=True)
             if run_result.returncode != 0:
                 # 运行失败
                 return {"test_id": test_id, "status": "error", "message": run_result.stderr}
@@ -68,7 +68,7 @@ def run_py(executable, code_dir, docker_image, test_file, expected_output_file, 
 
 
 @celery_app.task
-def judge_work(problem_id, username, code, language):
+def judge_work(problem_id, username, code, language, time_limit=2):
     try:
         code_dir = Path(f"./TestSamples/{problem_id}")
         code_dir.mkdir(parents=True, exist_ok=True)
@@ -105,7 +105,7 @@ def judge_work(problem_id, username, code, language):
                     test_results.append({"test_id": test_id, "status": "error", "message": "Missing expected output"})
                     continue
                 test_results.append(
-                    run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_file, test_id))
+                    run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_file, test_id,time_limit))
             return {"status": "completed", "results": test_results}
 
         # python
@@ -119,7 +119,7 @@ def judge_work(problem_id, username, code, language):
                     test_results.append({"test_id": test_id, "status": "error", "message": "Missing expected output"})
                     continue
                 test_results.append(
-                    run_py(code_file.name, code_dir, docker_image, test_file, expected_output_file, test_id))
+                    run_py(code_file.name, code_dir, docker_image, test_file, expected_output_file, test_id,time_limit))
                 print(test_results)
             return {"status": "completed", "results": test_results}
 

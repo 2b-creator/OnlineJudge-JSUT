@@ -61,6 +61,12 @@ CREATE TABLE user_permissions (
 );
 """
 
+create_tag_table = """
+CREATE TABLE tags (
+    id SERIAL PRIMARY KEY,
+    tag_name VARCHAR(20) NOT NULL,
+)
+"""
 # 对题目创建题目数据表
 
 create_question_data = """
@@ -72,7 +78,7 @@ CREATE TABLE problems (
     input_description TEXT NOT NULL,        -- 输入描述
     output_description TEXT NOT NULL,       -- 输出描述
     difficulty INT DEFAULT 1,  -- 难度等级（easy, medium, hard）
-    tag VARCHAR(20) NOT NULL,
+    tag_id INT REFERENCES tags(id) ON DELETE SET NULL,
     created_at TIMESTAMP DEFAULT NOW(),     -- 创建时间
     updated_at TIMESTAMP DEFAULT NOW(),     -- 更新时间
     time_limit INT NOT NULL,                -- 时间限制（单位：毫秒）
@@ -127,7 +133,7 @@ CREATE TABLE problem_competition (
 )
 """
 
-sample_table = """
+create_sample_table = """
 CREATE TABLE test_samples (
     id SERIAL PRIMARY KEY,
     sample_in TEXT,
@@ -138,8 +144,8 @@ CREATE TABLE test_samples (
 
 cursor = conn.cursor()
 ls = [create_user_table, create_user_profiles, create_user_statistics, create_permission, create_user_permissions,
-      create_question_data, join_user_ac_problems, create_competition_table, create_user_competition,
-      create_problem_competition]
+      create_tag_table, create_question_data, join_user_ac_problems, create_competition_table, create_user_competition,
+      create_problem_competition, create_sample_table]
 for i in ls:
     cursor.execute(i)
     conn.commit()
