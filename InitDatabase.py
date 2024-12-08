@@ -1,5 +1,6 @@
 import psycopg2
 import UserAdmin.UserLogic
+from Competitions.CompetitionOperator import create_competition
 from SerialToml import *
 from UserAdmin.Auth.md5s import md5_encrypt
 
@@ -100,6 +101,7 @@ CREATE TABLE user_problems (
     ac_lang VARCHAR(20) NOT NULL
 );
 """
+
 
 create_competition_table = """
 CREATE TABLE competition (
