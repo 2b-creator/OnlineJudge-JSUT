@@ -47,13 +47,12 @@ After=network.target
 
 [Service]
 Environment=\"$root_dir\"
-ExecStart=$root_dir/.venv/gunicorn -w 4 main:app
+ExecStart=$root_dir/.venv/bin/gunicorn -w 4 main:app
 WorkingDirectory=$root_dir
 StandardOutput=journal
 StandardError=journal
 Restart=always
-User=your_user
-Group=your_group
+User=$USER
 
 [Install]
 WantedBy=multi-user.target" | sudo tee /etc/systemd/system/oj_flask.service > /dev/null
@@ -64,13 +63,12 @@ After=network.target
 
 [Service]
 Environment=\"$root_dir\"
-ExecStart=$root_dir/.venv/celery -A tasks worker --loglevel=info
+ExecStart=$root_dir/.venv/bin/celery -A tasks worker --loglevel=info
 WorkingDirectory=$root_dir
 StandardOutput=journal
 StandardError=journal
 Restart=always
-User=your_user
-Group=your_group
+User=$USER
 
 [Install]
 WantedBy=multi-user.target" | sudo tee /etc/systemd/system/tasks_celery.service > /dev/null
