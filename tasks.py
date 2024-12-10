@@ -22,20 +22,22 @@ def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_f
             run_result = subprocess.run(run_cmd, stdin=input_file, capture_output=True, text=True, timeout=time_limit)
             if run_result.returncode != 0:
                 # 运行失败
-                return {"test_id": test_id, "status": "error", "message": run_result.stderr}
+                return {"test_id": test_id, "status": "error", "message": run_result.stderr, "color": "purple",
+                        "code": "ER"}
             else:
                 actual_output = run_result.stdout.strip()
                 expected_output = expected_file.read().strip()
                 if actual_output == expected_output:
-                    return {"test_id": test_id, "status": "success"}
+                    return {"test_id": test_id, "status": "success", "color": "green", "code": "AC"}
                 else:
                     return {"test_id": test_id, "status": "failed", "expected": expected_output,
-                            "actual": actual_output, "message": "Wrong answer"}
+                            "actual": actual_output, "message": "Wrong answer", "color": "red", "code": "WA"}
     except subprocess.TimeoutExpired:
-        return {"test_id": test_id, "status": "error", "message": "Time limit exceeded"}
+        return {"test_id": test_id, "status": "error", "message": "Time limit exceeded", "color": "blue", "code": "TLE"}
     except subprocess.CalledProcessError as e:
         if "memory" in e.stderr.lower():
-            return {"test_id": test_id, "status": "error", "message": "Memory limit exceeded"}
+            return {"test_id": test_id, "status": "error", "message": "Memory limit exceeded", "color": "yellow",
+                    "code": "MLE"}
 
 
 def run_py(executable, code_dir, docker_image, test_file, expected_output_file, test_id, time_limit):
@@ -51,20 +53,21 @@ def run_py(executable, code_dir, docker_image, test_file, expected_output_file, 
             run_result = subprocess.run(run_cmd, timeout=time_limit, stdin=input_file, capture_output=True, text=True)
             if run_result.returncode != 0:
                 # 运行失败
-                return {"test_id": test_id, "status": "error", "message": run_result.stderr}
+                return {"test_id": test_id, "status": "error", "message": run_result.stderr, "color": "purple",
+                        "code": "ER"}
             else:
                 actual_output = run_result.stdout.strip()
                 expected_output = expected_file.read().strip()
                 if actual_output == expected_output:
-                    return {"test_id": test_id, "status": "success"}
+                    return {"test_id": test_id, "status": "success", "color": "green", "code": "AC"}
                 else:
                     return {"test_id": test_id, "status": "failed", "expected": expected_output,
-                            "actual": actual_output}
+                            "actual": actual_output, "message": "Wrong answer", "color": "red", "code": "WA"}
     except subprocess.TimeoutExpired:
-        return {"status": "error", "message": "Time limit exceeded"}
+        return {"status": "error", "message": "Time limit exceeded", "color": "blue", "code": "TLE"}
     except subprocess.CalledProcessError as e:
         if "memory" in e.stderr.lower():
-            return {"status": "error", "message": "Memory limit exceeded"}
+            return {"status": "error", "message": "Memory limit exceeded", "color": "yellow", "code": "MLE"}
 
 
 @celery_app.task
