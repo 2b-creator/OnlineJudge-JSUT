@@ -17,7 +17,7 @@ def login(username: str, password_hash_cm: str) -> dict:
 
             if token is None or UserAdmin.Auth.GenJWT.validate_token(token, username) == False:
                 token = UserAdmin.Auth.GenJWT.generate_token(username)[0]
-                cursor.execute("UPDATE users SET access-token = %s WHERE username=%s", (token, username))
+                cursor.execute("UPDATE users SET access_token = %s WHERE username=%s", (token, username))
                 conn.commit()
             conn.close()
             return {"code": 200, "message": "login success", "access_token": token}
