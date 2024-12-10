@@ -9,7 +9,7 @@ celery_app = Celery(
 )
 
 
-def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_file, test_id,time_limit):
+def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_file, test_id, time_limit):
     try:
         with open(test_file) as input_file, open(expected_output_file) as expected_file:
             run_cmd = [
@@ -19,7 +19,7 @@ def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_f
                 "--cpus", "0.5",  # 限制 CPU
                 docker_image, f"/sandbox/{executable}", "<", test_file
             ]
-            run_result = subprocess.run(run_cmd, stdin=input_file, capture_output=True, text=True,timeout=time_limit)
+            run_result = subprocess.run(run_cmd, stdin=input_file, capture_output=True, text=True, timeout=time_limit)
             if run_result.returncode != 0:
                 # 运行失败
                 return {"test_id": test_id, "status": "error", "message": run_result.stderr}
@@ -30,7 +30,7 @@ def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_f
                     return {"test_id": test_id, "status": "success"}
                 else:
                     return {"test_id": test_id, "status": "failed", "expected": expected_output,
-                            "actual": actual_output}
+                            "actual": actual_output, "message": "Wrong answer"}
     except subprocess.TimeoutExpired:
         return {"test_id": test_id, "status": "error", "message": "Time limit exceeded"}
     except subprocess.CalledProcessError as e:
@@ -38,7 +38,7 @@ def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_f
             return {"test_id": test_id, "status": "error", "message": "Memory limit exceeded"}
 
 
-def run_py(executable, code_dir, docker_image, test_file, expected_output_file, test_id,time_limit):
+def run_py(executable, code_dir, docker_image, test_file, expected_output_file, test_id, time_limit):
     try:
         with open(test_file) as input_file, open(expected_output_file) as expected_file:
             run_cmd = [
@@ -94,7 +94,7 @@ def judge_work(problem_id, username, code, language, time_limit=2):
             compile_result = subprocess.run(compile_cmd, capture_output=True, text=True)
             if compile_result.returncode != 0:
                 # 编译失败, 返回错误信息
-                return {"status": "error", "message": compile_result.stderr}
+                return {"status": "error", "message": compile_result.stderr, "results": "Compile error"}
             # 运行测试用例
             test_results = []
             for test_file in code_dir.glob(f"{problem_id}-*.in"):
@@ -105,7 +105,8 @@ def judge_work(problem_id, username, code, language, time_limit=2):
                     test_results.append({"test_id": test_id, "status": "error", "message": "Missing expected output"})
                     continue
                 test_results.append(
-                    run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_file, test_id,time_limit))
+                    run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_file, test_id,
+                                time_limit))
             return {"status": "completed", "results": test_results}
 
         # python
@@ -119,7 +120,8 @@ def judge_work(problem_id, username, code, language, time_limit=2):
                     test_results.append({"test_id": test_id, "status": "error", "message": "Missing expected output"})
                     continue
                 test_results.append(
-                    run_py(code_file.name, code_dir, docker_image, test_file, expected_output_file, test_id,time_limit))
+                    run_py(code_file.name, code_dir, docker_image, test_file, expected_output_file, test_id,
+                           time_limit))
                 print(test_results)
             return {"status": "completed", "results": test_results}
 
