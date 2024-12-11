@@ -42,10 +42,10 @@ def get_question_detail(problem_id: int) -> dict:
                             port=port)
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT title, description, input_description, output_description, sample_input, sample_output, difficulty, tag, time_limit, memory_limit, submit_count, ac_count FROM problems WHERE id = %s",
+        "SELECT title, description, input_description, output_description, difficulty, time_limit, memory_limit, submit_count, ac_count FROM problems WHERE id = %s",
         (problem_id,))
     res = cursor.fetchall()[0]
-    col = "title, description, input_description, output_description, sample_input, sample_output, difficulty, tag, time_limit, memory_limit, submit_count, ac_count".split(
+    col = "title, description, input_description, output_description, difficulty, time_limit, memory_limit, submit_count, ac_count".split(
         ", ")
     dic = {key: res[i] for i, key in enumerate(col)}
     conn.close()
