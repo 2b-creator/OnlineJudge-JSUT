@@ -79,18 +79,24 @@ CREATE TABLE problems (
     input_description TEXT NOT NULL,        -- 输入描述
     output_description TEXT NOT NULL,       -- 输出描述
     difficulty INT DEFAULT 1,  -- 难度等级（easy, medium, hard）
-    tag_id INT REFERENCES tags(id) ON DELETE SET NULL,
     created_at TIMESTAMP DEFAULT NOW(),     -- 创建时间
     updated_at TIMESTAMP DEFAULT NOW(),     -- 更新时间
     time_limit INT NOT NULL,                -- 时间限制（单位：毫秒）
     memory_limit INT NOT NULL,              -- 内存限制（单位：MB）
     submit_count INT NOT NULL DEFAULT 0,    -- 提交次数
     ac_count INT NOT NULL DEFAULT 0,        -- 通过次数
-    author_id INT REFERENCES users(id) ON DELETE SET NULL, -- 作者（可选）
+    author_id INT REFERENCES users(id) ON DELETE CASCADE SET NULL, -- 作者（可选）
     is_public BOOLEAN DEFAULT TRUE          -- 是否公开
 );
 """
-
+create_tag_problem_ref = """
+CREATE TABLE tag_problems (
+    id SERIAL PRIMARY KEY,
+    tag_id INT REFERENCES tags(id) ON DELETE CASCADE,
+    problem_id INT NOT NULL,
+    FOREIGN KEY (problem_id) INT REFERENCES problems(id) ON DELETE CASCADE
+)
+"""
 # 关联表 users 和 ac 的 problems
 join_user_ac_problems = """
 CREATE TABLE user_problems (
@@ -101,7 +107,6 @@ CREATE TABLE user_problems (
     ac_lang VARCHAR(20) NOT NULL
 );
 """
-
 
 create_competition_table = """
 CREATE TABLE competition (
@@ -146,8 +151,8 @@ CREATE TABLE test_samples (
 
 cursor = conn.cursor()
 ls = [create_user_table, create_user_profiles, create_user_statistics, create_permission, create_user_permissions,
-      create_tag_table, create_question_data, join_user_ac_problems, create_competition_table, create_user_competition,
-      create_problem_competition, create_sample_table]
+      create_tag_table, create_question_data, create_tag_problem_ref, join_user_ac_problems, create_competition_table,
+      create_user_competition, create_problem_competition, create_sample_table]
 for i in ls:
     cursor.execute(i)
     conn.commit()

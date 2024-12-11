@@ -26,7 +26,12 @@ def get_question(start: int, num: int) -> dict[str, list]:
     res = cursor.fetchall()
     ls = []
     for i in res:
-        dic = {"id": i[0], "title": i[1], "tag": i[2]}
+        cursor.execute("SELECT tag_name FROM tags WHERE id = %s", (i[0],))
+        tag_name = cursor.fetchall()
+        tag_name_list = []
+        for j in range(len(tag_name)):
+            tag_name_list.append(tag_name[j][0])
+        dic = {"id": i[0], "title": i[1], "tag": tag_name_list}
         ls.append(dic)
     conn.close()
     return {"datas": ls}
