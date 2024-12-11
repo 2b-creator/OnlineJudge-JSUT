@@ -65,7 +65,7 @@ CREATE TABLE user_permissions (
 create_tag_table = """
 CREATE TABLE tags (
     id SERIAL PRIMARY KEY,
-    tag_name VARCHAR(20) NOT NULL,
+    tag_name VARCHAR(20) NOT NULL
 );
 """
 # 对题目创建题目数据表
