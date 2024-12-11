@@ -85,7 +85,7 @@ CREATE TABLE problems (
     memory_limit INT NOT NULL,              -- 内存限制（单位：MB）
     submit_count INT NOT NULL DEFAULT 0,    -- 提交次数
     ac_count INT NOT NULL DEFAULT 0,        -- 通过次数
-    author_id INT REFERENCES users(id) ON DELETE CASCADE SET NULL, -- 作者（可选）
+    author_id INT REFERENCES users(id) ON DELETE CASCADE DEFAULT NULL, -- 作者（可选）
     is_public BOOLEAN DEFAULT TRUE          -- 是否公开
 );
 """
