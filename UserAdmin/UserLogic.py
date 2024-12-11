@@ -37,7 +37,7 @@ def register(username: str, stu_id: int, password_hash_cm: str, email_cm: str):
         (username, stu_id, password_hash_cm, email_cm, access_token))
     conn.commit()
     conn.close()
-    return {"code": 200, "access-token": access_token, "message": "register success!"}
+    return {"code": 200, "access_token": access_token, "message": "register success!"}
 
 
 def check_role(username: str) -> str:

@@ -1,6 +1,6 @@
-curl -X POST http://192.168.1.107:8000/api/add_problem \
+curl -X POST http://192.168.1.105:8000/api/add_problem \
 -H "Content-Type: application/json" \
--H "access-token: your-access-token" \
+-H "access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpbSIsImV4cCI6MTczNDA5Njk0N30.yHFYjFLcX0pNrPteE6op9UXAYtj9JONjVIVOCzZPot4" \
 -d '{
   "title": "等差数列求和",
   "problem_char_id": "addArithmeticSequence",

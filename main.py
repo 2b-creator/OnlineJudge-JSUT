@@ -119,7 +119,7 @@ def add_problem():
         difficulty = request.json.get("difficulty")
         time_limit = request.json.get("time_limit")
         memory_limit = request.json.get("memory_limit")
-        tag = request.json.get("tag")
+        # tag = request.json.get("tag")
         author_id = get_user_id(get_username(request.headers.get("access-token")))
         problem_id = add_problems(title, problem_char_id, description, input_description, output_description,
                                   difficulty, time_limit, memory_limit, author_id, tag)
