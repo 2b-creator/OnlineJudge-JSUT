@@ -21,7 +21,7 @@ def get_question(start: int, num: int) -> dict[str, list]:
     conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
                             port=port)
     cursor = conn.cursor()
-    cursor.execute("SELECT id, title, tag FROM problems WHERE is_public = TRUE ORDER BY id LIMIT %s OFFSET %s;",
+    cursor.execute("SELECT id, title FROM problems WHERE is_public = TRUE ORDER BY id LIMIT %s OFFSET %s;",
                    (num, start))
     res = cursor.fetchall()
     ls = []

@@ -94,7 +94,7 @@ CREATE TABLE tag_problems (
     id SERIAL PRIMARY KEY,
     tag_id INT REFERENCES tags(id) ON DELETE CASCADE,
     problem_id INT NOT NULL,
-    FOREIGN KEY (problem_id) INT REFERENCES problems(id) ON DELETE CASCADE
+    FOREIGN KEY (problem_id) REFERENCES problems(id) ON DELETE CASCADE
 );
 """
 # 关联表 users 和 ac 的 problems
