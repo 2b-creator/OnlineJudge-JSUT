@@ -66,7 +66,7 @@ create_tag_table = """
 CREATE TABLE tags (
     id SERIAL PRIMARY KEY,
     tag_name VARCHAR(20) NOT NULL,
-)
+);
 """
 # 对题目创建题目数据表
 
@@ -95,7 +95,7 @@ CREATE TABLE tag_problems (
     tag_id INT REFERENCES tags(id) ON DELETE CASCADE,
     problem_id INT NOT NULL,
     FOREIGN KEY (problem_id) INT REFERENCES problems(id) ON DELETE CASCADE
-)
+);
 """
 # 关联表 users 和 ac 的 problems
 join_user_ac_problems = """
@@ -118,7 +118,7 @@ CREATE TABLE competition (
     sign_deter_time TIMESTAMP,
     start_at TIMESTAMP DEFAULT NOW(),
     finish_at TIMESTAMP
-)
+);
 """
 
 create_user_competition = """
@@ -129,7 +129,7 @@ CREATE TABLE user_competition (
     ac_list TEXT,
     submit_count INT NOT NULL DEFAULT 0,
     ac_count INT NOT NULL DEFAULT 0
-)
+);
 """
 
 create_problem_competition = """
@@ -137,7 +137,7 @@ CREATE TABLE problem_competition (
     id SERIAL PRIMARY KEY,
     problem_id INT REFERENCES problems(id) ON DELETE CASCADE,
     competition_id INT REFERENCES competition(id) ON DELETE CASCADE
-)
+);
 """
 
 create_sample_table = """
@@ -146,7 +146,7 @@ CREATE TABLE test_samples (
     sample_in TEXT,
     sample_out TEXT,
     problem_id INT REFERENCES problems(id) ON DELETE CASCADE
-)
+);
 """
 
 cursor = conn.cursor()
