@@ -26,7 +26,7 @@ def get_question(start: int, num: int) -> dict[str, list]:
     res = cursor.fetchall()
     ls = []
     for i in res:
-        cursor.execute("SELECT tag_name FROM tags WHERE id = %s", (i[0],))
+        cursor.execute("SELECT tags.tag_name FROM tags JOIN tag_problems ON tags.id = tag_problems.tag_id WHERE tag_problems.problem_id = %s", (i[0],))
         tag_name = cursor.fetchall()
         tag_name_list = []
         for j in range(len(tag_name)):
