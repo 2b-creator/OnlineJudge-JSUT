@@ -5,14 +5,15 @@ cd ./OnlineJudge-JSUT || exit
 root_dir=$(pwd)
 mkdir .venv
 python -m venv .venv
-./venv/bin/pip -r requirements.txt
+$root_dir/.venv/bin/pip install -r requirements.txt
+
 
 #安装前先卸载操作系统默认安装的docker,
 sudo apt-get remove docker docker-engine docker.io containerd runc
 #安装必要支持
 sudo apt install apt-transport-https ca-certificates curl software-properties-common gnupg lsb-release
 #添加 Docker 官方 GPG key （可能国内现在访问会存在问题）
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+# curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 # 阿里源（推荐使用阿里的gpg KEY）
 curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 #添加 apt 源:
@@ -73,6 +74,7 @@ User=$USER
 [Install]
 WantedBy=multi-user.target" | sudo tee /etc/systemd/system/tasks_celery.service > /dev/null
 sudo apt install redis-server
+sudo systemctl daemon-reload
 
 sudo systemctl enable --now tasks_celery.service
 sudo systemctl enable --now oj_flask.service

@@ -48,7 +48,7 @@ psql
 ```sql
 CREATE DATABASE JsutOJ
 ENCODING 'UTF8'
-OWNER JsutOJAdmin;
+OWNER "JsutOJAdmin";
 ```
 
 接着来到 /etc/postgresql/<pg_version>/main/ 下修改配置文件 pg_hba.conf, 其中 pg_version 是你的 PostgreSQL 版本号. 若没有找到该路径或文件请使用 find / -name pg_hba.conf 命令找到 pg.hba.conf 文件在哪. pg_hba.conf 用于配置客户端对数据库进行认证的详细参数. 具体格式和内容可参考 pg_hba.conf文件. 这里按照我的需求在文件末尾新开一行添加以下内容：
