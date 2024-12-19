@@ -12,7 +12,7 @@ pip3 install -r requirements.txt
 #安装前先卸载操作系统默认安装的docker,
 sudo apt-get remove docker docker-engine docker.io containerd runc
 #安装必要支持
-sudo apt install apt-transport-https ca-certificates curl software-properties-common gnupg lsb-release
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common gnupg lsb-release
 #添加 Docker 官方 GPG key （可能国内现在访问会存在问题）
 # curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 # 阿里源（推荐使用阿里的gpg KEY）
@@ -26,7 +26,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docke
 sudo apt update
 sudo apt-get update
 #安装最新版本的Docker
-sudo apt install docker-ce docker-ce-cli containerd.io
+sudo apt install -y docker-ce docker-ce-cli containerd.io
 #等待安装完成
 #查看Docker版本
 sudo docker version
@@ -74,7 +74,7 @@ User=$USER
 
 [Install]
 WantedBy=multi-user.target" | sudo tee /etc/systemd/system/tasks_celery.service > /dev/null
-sudo apt install redis-server
+sudo apt install -y redis-server
 sudo systemctl daemon-reload
 
 sudo systemctl enable --now tasks_celery.service
