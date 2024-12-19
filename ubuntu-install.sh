@@ -4,8 +4,9 @@ git clone https://github.com/2b-creator/OnlineJudge-JSUT.git
 cd ./OnlineJudge-JSUT || exit
 root_dir=$(pwd)
 mkdir .venv
-python -m venv .venv
-$root_dir/.venv/bin/pip install -r requirements.txt
+python3 -m venv .venv
+source /.venv/bin/activate
+pip3 install -r requirements.txt
 
 
 #安装前先卸载操作系统默认安装的docker,
@@ -81,3 +82,4 @@ sudo systemctl enable --now oj_flask.service
 sudo systemctl enable --now redis
 
 docker build -t sandbox .
+deactivate
