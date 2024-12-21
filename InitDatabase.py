@@ -78,14 +78,14 @@ CREATE TABLE problems (
     description TEXT NOT NULL,              -- 题目描述
     input_description TEXT NOT NULL,        -- 输入描述
     output_description TEXT NOT NULL,       -- 输出描述
-    difficulty INT DEFAULT 1,  -- 难度等级（easy, medium, hard）
+    difficulty INT DEFAULT 1,               -- 难度等级（easy, medium, hard）
     created_at TIMESTAMP DEFAULT NOW(),     -- 创建时间
     updated_at TIMESTAMP DEFAULT NOW(),     -- 更新时间
     time_limit INT NOT NULL,                -- 时间限制（单位：毫秒）
     memory_limit INT NOT NULL,              -- 内存限制（单位：MB）
     submit_count INT NOT NULL DEFAULT 0,    -- 提交次数
     ac_count INT NOT NULL DEFAULT 0,        -- 通过次数
-    author_id INT REFERENCES users(id) ON DELETE CASCADE DEFAULT NULL, -- 作者（可选）
+    author_id INT REFERENCES users(id) ON DELETE CASCADE, -- 作者（可选）
     is_public BOOLEAN DEFAULT TRUE          -- 是否公开
 );
 """
