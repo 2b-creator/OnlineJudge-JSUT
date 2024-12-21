@@ -96,9 +96,11 @@ def judge_work(problem_id, username, code, language, time_limit=2):
             ]
             compile_result = subprocess.run(compile_cmd, capture_output=True, text=True)
             if compile_result.returncode != 0:
+                return_ls = [
+                    {"status": "error", "message": compile_result.stderr, "results": "Compile error", "test_id": "0",
+                     "color": "black", "code": "CE"}]
                 # 编译失败, 返回错误信息
-                return {"status": "error", "message": compile_result.stderr, "results": "Compile error", "test_id": "0",
-                        "color": "black", "code": "CE"}
+                return return_ls
             # 运行测试用例
             test_results = []
             for test_file in code_dir.glob(f"{problem_id}-*.in"):

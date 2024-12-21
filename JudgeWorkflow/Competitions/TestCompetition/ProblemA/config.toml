@@ -1,1 +1,6 @@
 author = "作者"
+title = "HelloWorld"
+
+[limits]
+time = 2
+memory = 2048
