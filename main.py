@@ -93,9 +93,8 @@ def submit_code():
         return jsonify({"code": 500, "message": f"Task failed with status: {task.status}"}), 500
     else:
         for i in output["results"]:
-            if isinstance(i,str):
+            if isinstance(i, str):
                 add_submit_count(problem_char_id)
-                # todo add or set results.status
                 break
             if i["status"] != "success":
                 add_submit_count(problem_char_id)

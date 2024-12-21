@@ -47,6 +47,7 @@ def get_question_detail(problem_id: int) -> dict:
     res = cursor.fetchall()[0]
     col = "title, description, input_description, output_description, difficulty, time_limit, memory_limit, submit_count, ac_count".split(
         ", ")
+    # todo dic add sample
     dic = {key: res[i] for i, key in enumerate(col)}
     conn.close()
     return dic
