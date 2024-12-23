@@ -22,8 +22,8 @@ from tasks import judge_work
 
 
 # 自定义装饰器
-def require_access_token(f):
-    @wraps(f)
+def require_access_token(func):
+    @wraps(func)
     def decorated_function(*args, **kwargs):
         # 获取请求头中的 access-token
         access_token = request.headers.get('access-token')
@@ -38,7 +38,7 @@ def require_access_token(f):
             return jsonify({"message": "Invalid access token"}), 403
 
         # 如果验证通过, 继续执行原始函数
-        return f(*args, **kwargs)
+        return func(*args, **kwargs)
 
     return decorated_function
 

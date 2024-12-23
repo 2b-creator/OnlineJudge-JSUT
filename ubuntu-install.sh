@@ -31,7 +31,7 @@ sudo apt install -y docker-ce docker-ce-cli containerd.io
 #查看Docker版本
 sudo docker version
 #查看Docker运行状态
-sudo systemctl status docker
+#sudo systemctl status docker
 sudo apt-get install bash-completion
 sudo curl -L https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker -o /etc/bash_completion.d/docker.sh
 source /etc/bash_completion.d/docker.sh
