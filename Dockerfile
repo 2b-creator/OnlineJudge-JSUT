@@ -2,7 +2,7 @@
 FROM gcc:latest
 # 更改源
 
-RUN RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 871920D1991BC93C
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 871920D1991BC93C
 
 RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble main restricted universe multiverse \
 deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-updates main restricted universe multiverse \
