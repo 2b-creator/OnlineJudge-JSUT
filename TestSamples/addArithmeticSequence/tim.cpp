@@ -1,3 +1,3 @@
 #include<iostream>
  using namespace std;
- int main() { cout << 5051}
+ int main() { cout << 5050;}
