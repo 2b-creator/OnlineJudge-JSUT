@@ -86,7 +86,9 @@ CREATE TABLE problems (
     submit_count INT NOT NULL DEFAULT 0,    -- 提交次数
     ac_count INT NOT NULL DEFAULT 0,        -- 通过次数
     author_id INT REFERENCES users(id) ON DELETE CASCADE, -- 作者（可选）
-    is_public BOOLEAN DEFAULT TRUE          -- 是否公开
+    is_public BOOLEAN DEFAULT TRUE,         -- 是否公开
+    question_class INT NOT NULL DEFAULT 1,  -- 题目类型
+    judger INT NOT NULL DEFAULT 1           -- 全文比较(1)，spj(2)
 );
 """
 create_tag_problem_ref = """
@@ -128,7 +130,8 @@ CREATE TABLE user_competition (
     competition_id INT REFERENCES competition(id) ON DELETE CASCADE,
     ac_list TEXT,
     submit_count INT NOT NULL DEFAULT 0,
-    ac_count INT NOT NULL DEFAULT 0
+    ac_count INT NOT NULL DEFAULT 0,
+    score INT NOT NULL DEFAULT 0
 );
 """
 
@@ -136,7 +139,8 @@ create_problem_competition = """
 CREATE TABLE problem_competition (
     id SERIAL PRIMARY KEY,
     problem_id INT REFERENCES problems(id) ON DELETE CASCADE,
-    competition_id INT REFERENCES competition(id) ON DELETE CASCADE
+    competition_id INT REFERENCES competition(id) ON DELETE CASCADE,
+    score INT NOT NULL
 );
 """
 

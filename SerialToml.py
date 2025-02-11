@@ -15,3 +15,8 @@ root_nickname = config["root"]["nickname"]
 root_password = config["root"]["password"]
 root_role = "admin"
 root_email = config["root"]["email"]
+
+cp_cpu_limit = config["limit"]["complie_cpu"]
+cp_mem_limit = config["limit"]["complie_memory"]
+cp_time_limit = config["limit"]["complie_time"]
+output_limit = config["limit"]["output_limit"]

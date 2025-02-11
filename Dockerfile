@@ -4,9 +4,9 @@ FROM gcc:latest
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 871920D1991BC93C
 
-RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble main restricted universe multiverse \
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-updates main restricted universe multiverse \
-deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-backports main restricted universe multiverse" > /etc/apt/sources.list
+#RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble main restricted universe multiverse \
+#deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-updates main restricted universe multiverse \
+#deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ noble-backports main restricted universe multiverse" > /etc/apt/sources.list
 
 # 安装 Python 和必要工具
 RUN apt-get update && apt-get install -y \

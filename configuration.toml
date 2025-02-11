@@ -12,3 +12,9 @@ nickname = "孙笑川258"           # 昵称, 外部显示
 password = "1145141919810"      # 密码, 保存将以 md5 形式保存
 email = "qjtykr65536@gmail.com" # 邮箱
 
+[limit]
+complie_cpu = 0.5               # CPU 限制
+complie_memory = 128            # 内存限制(MB)
+complie_time = 10               # 时间限制
+output_limit = 33554432         # 输出超限阈值
+checker_max_score = 165765600   # checker最大分数
