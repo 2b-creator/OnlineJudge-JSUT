@@ -29,9 +29,9 @@ def run_cpp_exe(executable, code_dir, docker_image, test_file, expected_output_f
                         "code": "RE"}
             else:
                 actual_output = run_result.stdout
-                src_path = "./.out"
-                dst_path = "../.out" # todo
-                shutil.copy(src_path, dst_path)
+                # src_path = "./.out"
+                # dst_path = "../.out" # todo
+                # shutil.copy(src_path, dst_path)
                 expected_output = expected_file.read().strip()
                 if actual_output == expected_output:
                     return {"test_id": test_id, "status": "success", "color": "green", "code": "AC"}
@@ -93,12 +93,12 @@ def judge_work(problem_id, username, code, language, time_limit=2):
         # cpp
         if language == "cpp":
             executable = f"{username}"
-            # cmp_checker = ["g++","/checker."]
+            # cmp_checker = ["g++","/checker.cpp"]
             compile_cmd = [
                 "docker", "run", "--rm",
                 "-v", f"./{code_dir}:/sandbox",  # 挂载代码目录到 Docker 容器
                 "--memory", f"{mem_limit}m",  # 限制内存
-                "--cpus", cpu_limit,  # 限制 CPU
+                "--cpus", f"{cpu_limit}",  # 限制 CPU
                 docker_image, "g++",
                 f"/sandbox/{code_file.name}",
                 "-o", f"/sandbox/{executable}"
@@ -146,5 +146,5 @@ def judge_work(problem_id, username, code, language, time_limit=2):
         else:
             return {"status": "error", "message": f"Unsupported language: {language}"}
 
-    except Exception as e:
+    except ValueError as e:
         return {"status": "error", "message": str(e)}
