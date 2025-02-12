@@ -14,7 +14,9 @@ email = "qjtykr65536@gmail.com" # 邮箱
 
 [limit]
 complie_cpu = 0.5               # CPU 限制
-complie_memory = 128            # 内存限制(MB)
+complie_memory = 1024           # 内存限制(MB)
 complie_time = 10               # 时间限制
 output_limit = 33554432         # 输出超限阈值
-checker_max_score = 165765600   # checker最大分数
+checker_max_score = 240         # checker最大分数
+checker_time_limit = 10         # checker时间限制
+checker_memory_limit = 1024     # checker内存限制

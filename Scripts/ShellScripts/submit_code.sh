@@ -21,5 +21,5 @@ curl -X POST http://127.0.0.1:5000/api/submit \
 -H "Content-Type: application/json" \
 -H "access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpbSIsImV4cCI6MTczOTQyOTAwM30.T5UkKB9SFG03TSicAqHT1hs9e6H09uZ6nAu6zujdePI" \
 -d '{"id": 1,
-  "code": "#include<iostream>\n using namespace std;\n int main() { cout << 5050;}",
+  "code": "#include <iostream>\nusing namespace std;\n\nint main(int argc, char const *argv[])\n{\n    int c, d, n;\n    cin >> c >> d >> n;\n    int sums = 0;\n    for (int i = 1; i <= n; i++)\n    {\n        sums += (c * i + d);\n    }\n    cout << sums;\n    return 0;\n}\n",
   "language": "cpp"}'

@@ -149,7 +149,8 @@ CREATE TABLE test_samples (
     id SERIAL PRIMARY KEY,
     sample_in TEXT,
     sample_out TEXT,
-    problem_id INT REFERENCES problems(id) ON DELETE CASCADE
+    problem_id INT REFERENCES problems(id) ON DELETE CASCADE,
+    sample_description TEXT
 );
 """
 
