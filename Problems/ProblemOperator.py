@@ -26,7 +26,8 @@ def get_question(start: int, num: int) -> dict[str, list]:
     res = cursor.fetchall()
     ls = []
     for i in res:
-        cursor.execute("SELECT tags.tag_name FROM tags JOIN tag_problems ON tags.id = tag_problems.tag_id WHERE tag_problems.problem_id = %s", (i[0],))
+        cursor.execute(
+            "SELECT tags.tag_name FROM tags JOIN tag_problems ON tags.id = tag_problems.tag_id WHERE tag_problems.problem_id = %s", (i[0],))
         tag_name = cursor.fetchall()
         tag_name_list = []
         for j in range(len(tag_name)):
@@ -57,7 +58,8 @@ def get_question_by_chars(problem_char_id: str) -> int:
     conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
                             port=port)
     cursor = conn.cursor()
-    cursor.execute("SELECT id FROM problems WHERE problem_char_id = %s", (problem_char_id,))
+    cursor.execute(
+        "SELECT id FROM problems WHERE problem_char_id = %s", (problem_char_id,))
     res = cursor.fetchone()[0]
     conn.close()
     return int(res)
@@ -67,7 +69,18 @@ def get_question_char_by_id(problem_id: int) -> str:
     conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
                             port=port)
     cursor = conn.cursor()
-    cursor.execute("SELECT problem_char_id FROM problems WHERE id = %s", (problem_id,))
+    cursor.execute(
+        "SELECT problem_char_id FROM problems WHERE id = %s", (problem_id,))
     res = cursor.fetchone()[0]
     conn.close()
     return res
+
+
+def add_sample(problem_id: int, input: str, output: str, sample_description: str) -> None:
+    conn = psycopg2.connect(database=database_name, user=database_username, password=database_password, host=addr,
+                            port=port)
+    cursor = conn.cursor()
+    cursor.execute("INSET INTO test_samples (sample_in, sample_out, problem_id, sample_description) VALUES (%s, %s, %s, %s)",
+                   (input, output, problem_id, sample_description))
+    conn.commit()
+    conn.close()

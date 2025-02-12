@@ -9,14 +9,14 @@ from Competitions.CompetitionOperator import create_competition
 from Counters.CodeSubmitCounter import add_submit_count
 from Counters.StatisticAccept import record_ac
 from Problems.ProblemOperator import add_problems, get_question, get_question_detail, \
-    get_question_char_by_id
+    get_question_char_by_id, add_sample
 from UserAdmin.Auth.GenJWT import get_username
 from UserAdmin.Interaction import get_detail_user_info
 from UserAdmin.UserLogic import *
 import UserAdmin.UserLogic
 import toml
 from flask_cors import CORS
-
+import shutil
 app = Flask(__name__)
 CORS(app)  # 允许所有来源的请求
 
@@ -169,7 +169,36 @@ def add_problem():
     problem_id = add_problems(title, problem_char_id, description, input_description,
                               output_description, difficulty, time_limit, memory_limit, author_id)
     if not os.path.exists(f"./TestSamples/{problem_char_id}"):
-        os.mkdir(f"./TestSamples/{problem_char_id}") # todo
+        os.mkdir(f"./TestSamples/{problem_char_id}")  # todo
+
+    test_folder = problem_root_path/"test"
+    for files in test_folder.glob("*.in"):
+        saves = f"{problem_char_id}-{files.stem}.in"
+        shutil.copy(files, f"./TestSample/{problem_char_id}/{saves}")
+    for files in test_folder.glob("*.out"):
+        saves = f"{problem_char_id}-{files.stem}.out"
+        shutil.copy(files, f"./TestSample/{problem_char_id}/{saves}")
+
+    if special_judge == False:
+        shutil.copy("./checker.cpp",
+                    f"./TestSample/{problem_char_id}/checker.cpp")
+
+    if special_score == False:
+        shutil.copy("./calc.py", f"./TestSample/{problem_char_id}/calc.py")
+
+    for file in (problem_root_path/"sample").glob("*.in"):
+        file_name = files.stem
+        with open(file, "r") as f:
+            sample_in = f.read()
+        out_file_name = problem_root_path/"sample"/f"{file_name}.out"
+        with open(out_file_name, "r") as f:
+            sample_out = f.read()
+        sample_des_name = problem_root_path/"sample"/f"{file_name}.md"
+        with open(sample_des_name, "r") as f:
+            sample_description = f.read()
+        add_sample(problem_id, sample_in, sample_out, sample_description)
+
+    # todo add sample
     return jsonify({"code": 200, "problem_id": problem_id}), 200
 
 
