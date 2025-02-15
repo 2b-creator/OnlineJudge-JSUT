@@ -1,4 +1,8 @@
 # OnlineJudge-JSUT
+
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/2b-creator/OnlineJudge-JSUT) ![GitHub License](https://img.shields.io/github/license/2b-creator/OnlineJudge-JSUT) ![GitHub Repo stars](https://img.shields.io/github/stars/2b-creator/OnlineJudge-JSUT)
+ 
+
 ## 序言
 
 感谢使用 JSUT-OJ 后端 api, 本项目由江苏理工学院学生从 0 开始自主编写, 若您对该项目感兴趣, 不妨动动鼠标在右上角点一个 star 😊

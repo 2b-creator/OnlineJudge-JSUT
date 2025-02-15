@@ -107,6 +107,36 @@ def submit_code():
     return jsonify({"code": 200, "message:": "success!", "output": output}), 200
 
 
+@app.route('/api/submit/cmp', methods=['POST'])
+@require_access_token
+def submit_competition():
+    # todo
+    problem_id = request.json.get("problem_id")
+    cmp_id = request.json.get("competition_id")
+    language = request.json.get("language")
+    code = request.json.get("code")
+    dic = get_question_detail(problem_id)
+    time_limit = dic["time_limit"]
+    m_limit = dic["memory_limit"]
+    username = get_username(request.headers.get("access-token"))
+    problem_char_id = get_question_char_by_id(problem_id)
+    task = judge_work.delay(problem_char_id, username,
+                            code, language, time_limit)
+    output = task.get()
+    if task.failed():
+        return jsonify({"code": 500, "message": f"Task failed with status: {task.status}"}), 500
+    else:
+        add_submit_count(problem_char_id)
+        for i in output["results"]:
+            if isinstance(i, str):
+                break
+            if i["status"] != "success":
+                break
+        else:
+            record_ac(username, problem_char_id, language)
+    return jsonify({"code": 200, "message:": "success!", "output": output}), 200
+
+
 @app.route('/api/add_problem', methods=['POST'])
 @require_access_token
 def add_problem():
@@ -174,10 +204,12 @@ def get_problem_detail():
     dic = get_question_detail(problem_id)
     return jsonify({"code": 200, "data": dic}), 200
 
+
 @app.route('/api/send_issue')
 @require_access_token
 def send_issue():
-    content = request.args.get("content") # todo
+    content = request.args.get("content")  # todo
+
 
 if __name__ == "__main__":
     app.run()
