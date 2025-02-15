@@ -87,6 +87,7 @@ CREATE TABLE problems (
     ac_count INT NOT NULL DEFAULT 0,        -- 通过次数
     author_id INT REFERENCES users(id) ON DELETE CASCADE, -- 作者（可选）
     is_public BOOLEAN DEFAULT TRUE,         -- 是否公开
+    data_range_description TEXT,            -- 数据范围描述
     question_class INT NOT NULL DEFAULT 1,  -- 题目类型
     judger INT NOT NULL DEFAULT 1           -- 全文比较(1)，spj(2)
 );
@@ -119,7 +120,8 @@ CREATE TABLE competition (
     strict_lang VARCHAR(20),
     sign_deter_time TIMESTAMP,
     start_at TIMESTAMP DEFAULT NOW(),
-    finish_at TIMESTAMP
+    finish_at TIMESTAMP,
+    freeze_rank_time TIMESTAMP
 );
 """
 
@@ -140,7 +142,7 @@ CREATE TABLE problem_competition (
     id SERIAL PRIMARY KEY,
     problem_id INT REFERENCES problems(id) ON DELETE CASCADE,
     competition_id INT REFERENCES competition(id) ON DELETE CASCADE,
-    score INT NOT NULL
+    score INT NOT NULL,
 );
 """
 
@@ -154,17 +156,28 @@ CREATE TABLE test_samples (
 );
 """
 
+create_issue_table = """
+CREATE TABLE issues (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    problem_id INT REFERENCES problems(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    reply TEXT,
+);
+"""
+
 cursor = conn.cursor()
 ls = [create_user_table, create_user_profiles, create_user_statistics, create_permission, create_user_permissions,
       create_tag_table, create_question_data, create_tag_problem_ref, join_user_ac_problems, create_competition_table,
-      create_user_competition, create_problem_competition, create_sample_table]
+      create_user_competition, create_problem_competition, create_sample_table, create_issue_table]
 for i in ls:
     cursor.execute(i)
     conn.commit()
 
 # 加入 root 信息
 password_hash = md5_encrypt(root_password)
-UserAdmin.UserLogic.register(root_username, int(root_stu_id), password_hash, root_email)
+UserAdmin.UserLogic.register(root_username, int(
+    root_stu_id), password_hash, root_email)
 UserAdmin.UserLogic.change_role(root_username, root_role)
 conn.commit()
 conn.close()

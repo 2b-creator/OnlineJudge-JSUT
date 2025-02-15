@@ -24,7 +24,10 @@ def add_problem_for_competition(problem_ids: list[int], competition_id: int) -> 
     for i in problem_ids:
         cursor.execute("INSERT INTO problem_competition (problem_id, competition_id) VALUES (%s, %s) RETURNING id",
                        (i, competition_id))
+        cursor.execute(
+            "UPDATE problems SET is_public = false WHERE id = %s", (i,))
         ls.append(int(cursor.fetchone()[0]))
     conn.commit()
     conn.close()
     return ls
+

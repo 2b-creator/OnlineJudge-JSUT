@@ -1,0 +1,12 @@
+[problem]
+problem_char_id = "PinShu"
+title = "拼数"
+difficulty = 1
+
+[limit]
+time = 2
+memory = 128
+
+[special]
+judge = false
+score = false
